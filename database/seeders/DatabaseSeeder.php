@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Database seeded successfully!');
         $this->command->info('--------------------------------------');
-        $this->command->info('Admin: webkennyroger@gmail.com / 123456789');
+        $this->command->info('Admin: orarunbr@gmail.com / 123456789');
         $this->command->info('Free Users: usuario1@example.com / password');
         $this->command->info('Premium Users: premium1@example.com / password');
         $this->command->info('Annual Users: anual1@example.com / password');

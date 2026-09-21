@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
 
         // 1. Admin User (Kenny Roger)
         $admin = User::firstOrCreate(
-            ['email' => 'mereapp.mt@gmail.com'],
+            ['email' => 'orarunbr@gmail.com'],
             [
                 'name' => 'Kenny Roger',
                 'password' => bcrypt('123456789'),
