@@ -31,9 +31,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Database seeded successfully!');
         $this->command->info('--------------------------------------');
         $this->command->info('Admin: orarunbr@gmail.com / 123456789');
-        $this->command->info('Free Users: usuario1@example.com / password');
-        $this->command->info('Premium Users: premium1@example.com / password');
-        $this->command->info('Annual Users: anual1@example.com / password');
+        $this->command->info('Free User: usuario1@example.com / password');
+        $this->command->info('Monthly (Premium) User: usuario5@example.com / password');
+        $this->command->info('Annual User: usuario8@example.com / password');
         $this->command->info('--------------------------------------');
         $this->command->info('Notifications synced for generic Challenges!');
     }

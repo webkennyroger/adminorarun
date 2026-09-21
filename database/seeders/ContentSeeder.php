@@ -76,10 +76,16 @@ class ContentSeeder extends Seeder
     private function createStories(User $user)
     {
         for ($i = 0; $i < 3; $i++) {
+            // Mix in already-expired stories (i === 0) alongside active ones,
+            // so the admin Stories screen has real examples of both states.
+            $expiresAt = $i === 0
+                ? Carbon::now()->subHours(rand(1, 20))
+                : Carbon::now()->addHours(rand(4, 24));
+
             Story::create([
                 'user_id' => $user->id,
                 'image_url' => 'https://picsum.photos/seed/'.$user->id.$i.'/1080/1920', // Vertical layout
-                'expires_at' => Carbon::now()->addHours(rand(4, 24)), // Valid for next 24h
+                'expires_at' => $expiresAt,
                 'created_at' => Carbon::now()->subMinutes(rand(10, 300)), // Posted recently
             ]);
         }
