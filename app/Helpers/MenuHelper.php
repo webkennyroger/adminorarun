@@ -12,48 +12,14 @@ class MenuHelper
     {
         $items = [];
 
-        // Regular users see their profile as main page
+        // O admin não é mais um site público com feed/chat/comunidade —
+        // é só o painel de gestão do app. Usuário comum autenticado aqui
+        // só tem acesso à própria assinatura (os outros itens desse bloco
+        // eram links mortos: /home, /chat, /profile, /challenges e dois
+        // placeholders "#" sem nenhuma rota real por trás).
         if (auth()->check() && ! auth()->user()->isAdmin() && ! auth()->user()->isManager()) {
             $items[] = [
-                'icon' => 'home',
-                'name' => 'Página Inicial',
-                'path' => '/home',
-            ];
-
-            $items[] = [
-                'icon' => 'chat',
-                'name' => 'Chat',
-                'path' => '/chat',
-                // Using a closure or direct count if performant enough. For now direct.
-                'badge' => auth()->check() ? Message::where('receiver_id', auth()->id())->whereNull('read_at')->count() : 0,
-            ];
-
-            $items[] = [
-                'icon' => 'user-profile',
-                'name' => 'Meu Perfil',
-                'path' => '/profile',
-            ];
-
-            $items[] = [
-                'icon' => 'pages',
-                'name' => 'Desafios',
-                'path' => '/challenges',
-            ];
-
-            $items[] = [
-                'icon' => 'charts',
-                'name' => 'Estatísticas',
-                'path' => '#',
-            ];
-
-            $items[] = [
-                'icon' => 'ui-elements',
-                'name' => 'Comunidade',
-                'path' => '#',
-            ];
-
-            $items[] = [
-                'icon' => 'ecommerce', // Using existing icon key for now, or add 'credit-card'
+                'icon' => 'ecommerce',
                 'name' => 'Minha Assinatura',
                 'path' => '/billing',
             ];
@@ -61,12 +27,6 @@ class MenuHelper
 
         // Only show admin pages to admins and managers
         if (auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isManager())) {
-            $items[] = [
-                'icon' => 'home',
-                'name' => 'Ir para o Feed',
-                'path' => '/home',
-            ];
-
             $items[] = [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
