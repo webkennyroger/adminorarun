@@ -1,4 +1,4 @@
-<div class="rounded-2xl border border-zinc-200 bg-white px-5 pb-5 pt-5 dark:border-zinc-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6"
+<div class="rounded-2xl px-5 pb-5 pt-5 sm:px-6 sm:pt-6" style="background-color: var(--bg-card); border: 1px solid var(--border-color);"
     x-data="{
         chart: null,
         initChart() {
@@ -10,7 +10,7 @@
             const usersData = @js($usersChartValues);
             const subscribersData = @js($subscribersChartValues);
             const chartLabels = @js($chartLabels);
-            
+
             const options = {
                 series: [
                     {
@@ -80,7 +80,7 @@
             if (this.chart) {
                 this.chart.destroy();
             }
-            
+
             this.chart = new ApexCharts(document.querySelector('#userGrowthChart'), options);
             this.chart.render();
         }
@@ -89,23 +89,26 @@
     <!-- Header -->
     <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-1 items-center justify-between space-x-2 sm:flex-initial">
-            <h2 class="text-sm-plus font-medium tracking-wide text-zinc-800 dark:text-dark-100">
+            <h2 class="text-sm-plus font-medium tracking-wide" style="color: var(--text-primary);">
                 Crescimento
             </h2>
         </div>
 
         <!-- Period Selector -->
-        <div class="inline-flex items-center gap-0.5 rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-900">
+        <div class="inline-flex items-center gap-0.5 rounded-lg p-0.5" style="background-color: var(--bg-elevated);">
             <button wire:click="$set('period', 'monthly')"
-                class="px-3 py-2 font-medium rounded-md text-theme-sm hover:text-zinc-900 hover:shadow-theme-xs dark:hover:bg-zinc-800 dark:hover:text-white {{ $period === 'monthly' ? 'shadow-theme-xs text-zinc-900 dark:text-white bg-white dark:bg-zinc-800' : 'text-zinc-500 dark:text-zinc-400' }}">
+                class="px-3 py-2 font-medium rounded-md text-theme-sm transition-colors"
+                style="{{ $period === 'monthly' ? 'background-color: var(--bg-card); color: var(--text-primary);' : 'color: var(--text-secondary);' }}">
                 Mensal
             </button>
             <button wire:click="$set('period', 'quarterly')"
-                class="px-3 py-2 font-medium rounded-md text-theme-sm hover:text-zinc-900 hover:shadow-theme-xs dark:hover:text-white {{ $period === 'quarterly' ? 'shadow-theme-xs text-zinc-900 dark:text-white bg-white dark:bg-zinc-800' : 'text-zinc-500 dark:text-zinc-400' }}">
+                class="px-3 py-2 font-medium rounded-md text-theme-sm transition-colors"
+                style="{{ $period === 'quarterly' ? 'background-color: var(--bg-card); color: var(--text-primary);' : 'color: var(--text-secondary);' }}">
                 Trimestral
             </button>
             <button wire:click="$set('period', 'yearly')"
-                class="px-3 py-2 font-medium rounded-md text-theme-sm hover:text-zinc-900 hover:shadow-theme-xs dark:hover:text-white {{ $period === 'yearly' ? 'shadow-theme-xs text-zinc-900 dark:text-white bg-white dark:bg-zinc-800' : 'text-zinc-500 dark:text-zinc-400' }}">
+                class="px-3 py-2 font-medium rounded-md text-theme-sm transition-colors"
+                style="{{ $period === 'yearly' ? 'background-color: var(--bg-card); color: var(--text-primary);' : 'color: var(--text-secondary);' }}">
                 Anual
             </button>
         </div>
@@ -116,35 +119,33 @@
         <!-- Users Stats -->
         <div class="flex items-start gap-2">
             <div>
-                <h4 class="mb-0.5 text-base font-bold text-zinc-800 dark:text-white/90 sm:text-theme-xl">
+                <h4 class="mb-0.5 text-base font-bold sm:text-theme-xl" style="color: var(--text-primary);">
                     {{ number_format($currentPeriodUsers, 0, ',', '.') }}
                 </h4>
-                <span class="text-zinc-500 text-theme-xs dark:text-zinc-400">
+                <span class="text-theme-xs" style="color: var(--text-secondary);">
                     Total Usuários
                     ({{ $period === 'monthly' ? 'Mês' : ($period === 'quarterly' ? 'Trimestre' : 'Ano') }})
                 </span>
             </div>
-            <span
-                class="mt-1.5 flex items-center gap-1 rounded-full {{ $usersGrowthPercentage >= 0 ? 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500' }} px-2 py-0.5 text-theme-xs font-medium">
+            <x-ui.badge :variant="$usersGrowthPercentage >= 0 ? 'success' : 'danger'" size="sm" class="mt-1.5">
                 {{ $usersGrowthPercentage >= 0 ? '+' : '' }}{{ number_format($usersGrowthPercentage, 1) }}%
-            </span>
+            </x-ui.badge>
         </div>
 
         <!-- Subscribers Stats -->
         <div class="flex items-start gap-2">
             <div>
-                <h4 class="mb-0.5 text-base font-bold text-zinc-800 dark:text-white/90 sm:text-theme-xl">
+                <h4 class="mb-0.5 text-base font-bold sm:text-theme-xl" style="color: var(--text-primary);">
                     {{ number_format($currentPeriodSubscribers, 0, ',', '.') }}
                 </h4>
-                <span class="text-zinc-500 text-theme-xs dark:text-zinc-400">
+                <span class="text-theme-xs" style="color: var(--text-secondary);">
                     Total Assinantes
                     ({{ $period === 'monthly' ? 'Mês' : ($period === 'quarterly' ? 'Trimestre' : 'Ano') }})
                 </span>
             </div>
-            <span
-                class="mt-1.5 flex items-center gap-1 rounded-full {{ $subscribersGrowthPercentage >= 0 ? 'bg-cyan-50 text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-500' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500' }} px-2 py-0.5 text-theme-xs font-medium">
+            <x-ui.badge :variant="$subscribersGrowthPercentage >= 0 ? 'info' : 'danger'" size="sm" class="mt-1.5">
                 {{ $subscribersGrowthPercentage >= 0 ? '+' : '' }}{{ number_format($subscribersGrowthPercentage, 1) }}%
-            </span>
+            </x-ui.badge>
         </div>
     </div>
 
