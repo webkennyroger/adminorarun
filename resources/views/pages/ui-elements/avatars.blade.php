@@ -5,7 +5,7 @@
     
     @php
         $avatarSrc = asset('images/user/user-01.jpg');
-        $sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge'];
+        $sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
     @endphp
 
     <div class="space-y-5 sm:space-y-6">

@@ -27,7 +27,7 @@
 
 
 
-            <button @click="$dispatch('open-profile-address-modal')"
+            <button @click="$dispatch('open-modal', 'address')"
                 class="flex w-full items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 shadow-theme-xs hover:bg-zinc-50 hover:text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-white/[0.03] dark:hover:text-zinc-200 lg:inline-flex lg:w-auto">
                 <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -39,18 +39,14 @@
             </button>
         </div>
     </div>
-    <x-ui.modal x-data="{ open: false }" @open-profile-address-modal.window="open = true"
-        @close-profile-address-modal.window="open = false" :isOpen="false" class="max-w-[700px]">
-        <div
-            class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-zinc-900 lg:p-11">
-            <div class="px-2 pr-14">
-                <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
-                    Editar Endereço
-                </h4>
-                <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
-                    Atualize os detalhes do seu endereço.
-                </p>
-            </div>
+    <x-ui.modal name="address" maxWidth="700px">
+        <div>
+            <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
+                Editar Endereço
+            </h4>
+            <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
+                Atualize os detalhes do seu endereço.
+            </p>
             <form wire:submit="saveAddress" class="flex flex-col">
                 <div class="px-2 overflow-y-auto custom-scrollbar">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">

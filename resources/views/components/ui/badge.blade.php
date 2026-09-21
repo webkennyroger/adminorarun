@@ -1,53 +1,45 @@
-
 @props([
-    'variant' => 'light',
+    'variant' => 'default',
     'size' => 'md',
-    'color' => 'primary',
+    'dot' => false,
+    // Aditivo (não existe no componente original do DPEMT): ícone/HTML
+    // antes ou depois do texto do badge.
     'startIcon' => null,
     'endIcon' => null,
 ])
 
 @php
-    $baseStyles = 'inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium capitalize';
-
-    $sizeStyles = [
-        'sm' => 'text-xs',
-        'md' => 'text-sm',
-    ];
+    $base = 'inline-flex items-center font-semibold rounded-full';
 
     $variants = [
-        'light' => [
-            'primary' => 'bg-blue-50 text-blue-500 dark:bg-blue-500/15 dark:text-blue-400',
-            'success' => 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500',
-            'error' => 'bg-red-50 text-red-600 dark:bg-red-500/15 dark:text-red-500',
-            'warning' => 'bg-yellow-50 text-yellow-600 dark:bg-yellow-500/15 dark:text-orange-400',
-            'info' => 'bg-sky-50 text-sky-500 dark:bg-sky-500/15 dark:text-sky-500',
-            'light' => 'bg-zinc-100 text-zinc-700 dark:bg-white/5 dark:text-white/80',
-            'dark' => 'bg-zinc-500 text-white dark:bg-white/5 dark:text-white',
-        ],
-        'solid' => [
-            'primary' => 'bg-blue-500 text-white dark:text-white',
-            'success' => 'bg-green-500 text-white dark:text-white',
-            'error' => 'bg-red-500 text-white dark:text-white',
-            'warning' => 'bg-yellow-500 text-white dark:text-white',
-            'info' => 'bg-sky-500 text-white dark:text-white',
-            'light' => 'bg-zinc-400 dark:bg-white/5 text-white dark:text-white/80',
-            'dark' => 'bg-zinc-700 text-white dark:text-white',
-        ],
+        'default' => 'border',
+        'primary' => 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+        'warning' => 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+        'danger' => 'bg-red-500/10 text-red-400 border border-red-500/20',
+        'info' => 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+        'success' => 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
     ];
 
-    $sizeClass = $sizeStyles[$size] ?? $sizeStyles['md'];
-    $colorStyles = $variants[$variant][$color] ?? $variants['light']['primary'];
+    $variantStyle = $variant === 'default' ? 'background-color: var(--bg-elevated); color: var(--text-secondary); border-color: var(--border-color);' : '';
+
+    $sizes = [
+        'xs' => 'px-2 py-0.5 text-xs',
+        'sm' => 'px-2.5 py-0.5 text-xs',
+        'md' => 'px-3 py-1 text-xs',
+    ];
+
+    $classes = $base . ' ' . ($variants[$variant] ?? $variants['default']) . ' ' . ($sizes[$size] ?? $sizes['md']);
 @endphp
 
-<span class="{{ $baseStyles }} {{ $sizeClass }} {{ $colorStyles }}" {{ $attributes }}>
-    @if($startIcon)
-        {!! $startIcon !!}
+<span {{ $attributes->merge(['class' => $classes]) }} @if($variantStyle) style="{{ $variantStyle }}" @endif>
+    @if($dot)
+        <span class="w-1.5 h-1.5 rounded-full bg-current mr-1.5 {{ $variant === 'primary' ? 'animate-pulse' : '' }}"></span>
     @endif
-
+    @if($startIcon)
+        <span class="mr-1 inline-flex items-center">{!! $startIcon !!}</span>
+    @endif
     {{ $slot }}
-
     @if($endIcon)
-        {!! $endIcon !!}
+        <span class="ml-1 inline-flex items-center">{!! $endIcon !!}</span>
     @endif
 </span>

@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <button class="edit-button" @click="$dispatch('open-profile-social-modal')">
+        <button class="edit-button" @click="$dispatch('open-modal', 'social-media')">
             <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -99,18 +99,14 @@
     </div>
 
     <!-- Social Media Modal -->
-    <x-ui.modal x-data="{ open: false }" @open-profile-social-modal.window="open = true"
-        @close-profile-social-modal.window="open = false" :isOpen="false" class="max-w-[700px]">
-        <div
-            class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-zinc-900 lg:p-11">
-            <div class="px-2 pr-14">
-                <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
-                    Editar Redes Sociais
-                </h4>
-                <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
-                    Atualize seus links de redes sociais
-                </p>
-            </div>
+    <x-ui.modal name="social-media" maxWidth="700px">
+        <div>
+            <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
+                Editar Redes Sociais
+            </h4>
+            <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
+                Atualize seus links de redes sociais
+            </p>
             <form wire:submit="updateSocialMedia" class="flex flex-col">
                 <div class="custom-scrollbar overflow-y-auto p-2">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
