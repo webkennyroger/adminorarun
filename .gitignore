@@ -32,3 +32,7 @@ Homestead.yaml
 
 # Auth
 /auth.json
+
+# Claude Code local/session-only state (not shared project config)
+/.claude/worktrees/
+/.claude/settings.local.json

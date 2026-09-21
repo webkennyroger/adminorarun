@@ -49,8 +49,8 @@
     --color-black: #000000;
 
     /* Escala verde derivada de #16B83E (cor "ORA RUN" do app mobile) —
-       troca o accent do admin inteiro, já que bg-brand-*/text-brand-*/
-       ring-brand-*/menu-item-active etc. usam essa escala em todo o admin. */
+       troca o accent do admin inteiro, já que bg-brand, text-brand,
+       ring-brand, menu-item-active etc. usam essa escala em todo o admin. */
     --color-brand-25: #f2fbf5;
     --color-brand-50: #e6f8ec;
     --color-brand-100: #ccf1d9;
