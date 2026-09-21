@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Posts\CreatePost;
+use App\Actions\Posts\DeletePost;
+use App\Actions\Posts\UpdatePost;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Traits\ResolvesActivityItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class PollController extends Controller
 {
-    use \App\Traits\ResolvesActivityItems;
+    use ResolvesActivityItems;
 
     /**
      * Store a newly created poll in storage.
@@ -36,7 +40,7 @@ class PollController extends Controller
         $user = $request->user();
 
         // Create Poll (as a Post with type='poll')
-        $poll = (new \App\Actions\Posts\CreatePost)->execute([
+        $poll = (new CreatePost)->execute([
             'user_id' => $user->id,
             'title' => $request->question,
             'content' => $request->description ?? '',
@@ -83,7 +87,7 @@ class PollController extends Controller
             return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
 
-        $item = (new \App\Actions\Posts\UpdatePost)->execute($item, [
+        $item = (new UpdatePost)->execute($item, [
             'title' => $request->question,
             'content' => $request->description,
             'privacy' => $request->privacy,
@@ -109,7 +113,7 @@ class PollController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        (new \App\Actions\Posts\DeletePost)->execute($item);
+        (new DeletePost)->execute($item);
 
         return response()->json([
             'success' => true,

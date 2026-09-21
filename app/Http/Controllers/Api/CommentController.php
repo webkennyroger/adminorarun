@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CommentPosted;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Traits\ResolvesActivityItems;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -61,15 +64,15 @@ class CommentController extends Controller
         // Determinar o ID prefixado correto para o broadcast
         $prefixedId = $id;
         if (! is_string($id) || ! str_contains($id, '_')) {
-            $prefix = ($item instanceof \App\Models\Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
+            $prefix = ($item instanceof Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
             $prefixedId = $prefix.$item->id;
         }
 
         try {
-            event(new \App\Events\CommentPosted($prefixedId, $formattedComment));
+            event(new CommentPosted($prefixedId, $formattedComment));
         } catch (\Throwable $e) {
             // Broadcast failure should not prevent comment creation
-            \Illuminate\Support\Facades\Log::warning('CommentPosted broadcast failed: '.$e->getMessage());
+            Log::warning('CommentPosted broadcast failed: '.$e->getMessage());
         }
 
         return response()->json([
@@ -129,7 +132,7 @@ class CommentController extends Controller
         ]);
     }
 
-    use \App\Traits\ResolvesActivityItems;
+    use ResolvesActivityItems;
 
     protected function formatComment($comment, $userId)
     {

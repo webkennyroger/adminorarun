@@ -3,7 +3,9 @@
 namespace App\Livewire\Categories;
 
 use App\Models\Category;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -71,11 +73,11 @@ class CategoryIndex extends Component
         ];
 
         // Generate slug from name to validate it
-        $slug = \Illuminate\Support\Str::slug($this->name);
+        $slug = Str::slug($this->name);
 
         // Add unique rule for name and slug, ignoring current record if editing
-        $uniqueNameRule = \Illuminate\Validation\Rule::unique('categories', 'name');
-        $uniqueSlugRule = \Illuminate\Validation\Rule::unique('categories', 'slug')
+        $uniqueNameRule = Rule::unique('categories', 'name');
+        $uniqueSlugRule = Rule::unique('categories', 'slug')
             ->where(function ($query) use ($slug) {
                 $query->where('slug', $slug);
             });
@@ -231,7 +233,7 @@ class CategoryIndex extends Component
         if ($this->perPage == -1) {
             $categories = $this->getCategoriesQuery()->get();
 
-            $categories = new \Illuminate\Pagination\LengthAwarePaginator(
+            $categories = new LengthAwarePaginator(
                 $categories,
                 $categories->count(),
                 $categories->count(),

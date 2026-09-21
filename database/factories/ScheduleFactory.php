@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Schedule>
+ * @extends Factory<Schedule>
  */
 class ScheduleFactory extends Factory
 {
@@ -33,7 +35,7 @@ class ScheduleFactory extends Factory
         ];
 
         // Get first user or create one
-        $user = \App\Models\User::first() ?? \App\Models\User::factory()->create();
+        $user = User::first() ?? User::factory()->create();
 
         return [
             'user_id' => $user->id,

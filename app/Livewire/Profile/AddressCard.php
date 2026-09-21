@@ -3,6 +3,7 @@
 namespace App\Livewire\Profile;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class AddressCard extends Component
@@ -34,7 +35,7 @@ class AddressCard extends Component
         $cep = preg_replace('/[^0-9]/', '', $value);
 
         if (strlen($cep) === 8) {
-            $response = \Illuminate\Support\Facades\Http::get("https://viacep.com.br/ws/{$cep}/json/");
+            $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
 
             if ($response->successful() && ! isset($response['erro'])) {
                 $data = $response->json();

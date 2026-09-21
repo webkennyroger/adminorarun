@@ -1,16 +1,18 @@
 <?php
 
+use App\Models\User;
+
 if (! function_exists('profile_url')) {
     /**
      * Generate profile URL using nickname
      *
-     * @param  \App\Models\User|int  $user
+     * @param  User|int  $user
      * @return string
      */
     function profile_url($user)
     {
         if (is_numeric($user)) {
-            $user = \App\Models\User::find($user);
+            $user = User::find($user);
         }
 
         if (! $user) {

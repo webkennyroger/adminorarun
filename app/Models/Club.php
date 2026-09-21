@@ -55,6 +55,7 @@ class Club extends Model
     public function getMemberRole($userId): ?string
     {
         $pivot = $this->members()->where('user_id', $userId)->first();
+
         return $pivot?->pivot?->role;
     }
 }

@@ -20,7 +20,7 @@ class ClubController extends Controller
 
         // Filter by location
         if ($request->has('city')) {
-            $query->where('city', 'like', '%' . $request->city . '%');
+            $query->where('city', 'like', '%'.$request->city.'%');
         }
         if ($request->has('state')) {
             $query->where('state', $request->state);
@@ -29,8 +29,8 @@ class ClubController extends Controller
         // Search by name
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('description', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -45,6 +45,7 @@ class ClubController extends Controller
         $userId = Auth::id();
         $clubs->getCollection()->transform(function ($club) use ($userId) {
             $club->is_following = $club->isMember($userId);
+
             return $club;
         });
 
@@ -61,6 +62,7 @@ class ClubController extends Controller
         $clubs->transform(function ($club) use ($userId) {
             $club->is_following = true;
             $club->role = $club->getMemberRole($userId);
+
             return $club;
         });
 
@@ -71,6 +73,7 @@ class ClubController extends Controller
     {
         $club = Club::findOrFail($id);
         $club->is_following = $club->isMember(Auth::id());
+
         return response()->json($club);
     }
 
@@ -118,7 +121,7 @@ class ClubController extends Controller
 
         // Check if user is admin/creator of the club
         $role = $club->getMemberRole(Auth::id());
-        if (!in_array($role, ['creator', 'admin'])) {
+        if (! in_array($role, ['creator', 'admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -171,7 +174,7 @@ class ClubController extends Controller
         $club = Club::findOrFail($id);
         $user = Auth::user();
 
-        if (!$club->isMember($user->id)) {
+        if (! $club->isMember($user->id)) {
             return response()->json(['message' => 'Not a member'], 400);
         }
 
@@ -208,6 +211,7 @@ class ClubController extends Controller
     public function categories()
     {
         $categories = Club::distinct()->pluck('category')->filter();
+
         return response()->json($categories);
     }
 }

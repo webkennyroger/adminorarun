@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class SocialSeeder extends Seeder
 {
@@ -13,19 +16,19 @@ class SocialSeeder extends Seeder
     {
         // Ensure we have users
         // Ensure we have users
-        if (\App\Models\User::count() < 10) {
+        if (User::count() < 10) {
             // \App\Models\User::factory(10)->create();
             $this->command->info('Skipping user factory generation in production.');
         }
 
-        $me = \App\Models\User::first();
+        $me = User::first();
         $me->email = 'admin@admin.com'; // Ensure known user
         $me->save();
 
         $this->command->info("Main User: {$me->name} (ID: {$me->id})");
 
         // Make sure I follow someone
-        $others = \App\Models\User::where('id', '!=', $me->id)->take(5)->get();
+        $others = User::where('id', '!=', $me->id)->take(5)->get();
         foreach ($others as $other) {
             if (! $me->following()->where('following_id', $other->id)->exists()) {
                 $me->following()->attach($other->id);
@@ -34,9 +37,9 @@ class SocialSeeder extends Seeder
 
             // Ensure they have activities
             if ($other->activities()->count() == 0) {
-                \App\Models\Activity::create([
+                Activity::create([
                     'user_id' => $other->id,
-                    'app_id' => \Illuminate\Support\Str::uuid(),
+                    'app_id' => Str::uuid(),
                     'title' => 'Morning Run',
                     'sport_type' => 'Run',
                     'start_time' => now()->subHours(rand(1, 24)),
@@ -50,7 +53,7 @@ class SocialSeeder extends Seeder
         }
 
         // Make sure someone follows me
-        $fans = \App\Models\User::where('id', '!=', $me->id)->skip(5)->take(3)->get();
+        $fans = User::where('id', '!=', $me->id)->skip(5)->take(3)->get();
         foreach ($fans as $fan) {
             if (! $fan->following()->where('following_id', $me->id)->exists()) {
                 $fan->following()->attach($me->id);

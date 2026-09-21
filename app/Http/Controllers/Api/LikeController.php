@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\LikeToggled;
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Comment;
+use App\Traits\ResolvesActivityItems;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
-    use \App\Traits\ResolvesActivityItems;
+    use ResolvesActivityItems;
 
     /**
      * Toggle like on an item (post, poll, activity).
@@ -33,11 +36,11 @@ class LikeController extends Controller
         // Determinar o ID prefixado correto para o broadcast
         $prefixedId = $id;
         if (! is_string($id) || ! str_contains($id, '_')) {
-            $prefix = ($item instanceof \App\Models\Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
+            $prefix = ($item instanceof Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
             $prefixedId = $prefix.$item->id;
         }
 
-        event(new \App\Events\LikeToggled($prefixedId, $isLiked, $likesCount, $user->id));
+        event(new LikeToggled($prefixedId, $isLiked, $likesCount, $user->id));
 
         return response()->json([
             'success' => true,

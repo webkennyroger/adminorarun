@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Goal;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -92,7 +93,7 @@ class GoalChart extends Component
 
         switch ($metric) {
             case 'users':
-                return \App\Models\User::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+                return User::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
             default:
                 // Mock para outros tipos enquanto não existem as tabelas
                 return 0;
@@ -106,7 +107,7 @@ class GoalChart extends Component
 
         switch ($metric) {
             case 'users':
-                return \App\Models\User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+                return User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
             default:
                 return 0;
         }
@@ -119,7 +120,7 @@ class GoalChart extends Component
 
         switch ($metric) {
             case 'users':
-                return \App\Models\User::where('created_at', '>=', $startOfDay)->count();
+                return User::where('created_at', '>=', $startOfDay)->count();
             default:
                 return 0; // Placeholder
         }

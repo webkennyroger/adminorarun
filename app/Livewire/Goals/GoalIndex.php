@@ -3,6 +3,7 @@
 namespace App\Livewire\Goals;
 
 use App\Models\Goal;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -221,7 +222,7 @@ class GoalIndex extends Component
         if ($this->perPage === -1) {
             $goals = $this->getGoalsQuery()->get();
 
-            $goals = new \Illuminate\Pagination\LengthAwarePaginator(
+            $goals = new LengthAwarePaginator(
                 $goals,
                 $goals->count(),
                 $goals->count(),

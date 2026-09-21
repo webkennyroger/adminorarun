@@ -3,6 +3,9 @@
 namespace App\Livewire\Support;
 
 use App\Models\Support;
+use App\Models\User;
+use App\Notifications\TicketCreated;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -23,7 +26,7 @@ class SupportIndex extends Component
 
     public function submitSupportForm()
     {
-        \Illuminate\Support\Facades\Log::info('Support form submission started', [
+        Log::info('Support form submission started', [
             'user' => auth()->id(),
             'data' => [
                 'subject' => $this->subject,
@@ -43,9 +46,9 @@ class SupportIndex extends Component
         ]);
 
         // Notify Admin
-        $admin = \App\Models\User::where('email', 'webkennyroger@gmail.com')->first();
+        $admin = User::where('email', 'webkennyroger@gmail.com')->first();
         if ($admin) {
-            $admin->notify(new \App\Notifications\TicketCreated($ticket));
+            $admin->notify(new TicketCreated($ticket));
         }
 
         $this->reset();

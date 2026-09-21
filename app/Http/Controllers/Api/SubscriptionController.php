@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionPlan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
@@ -60,7 +61,7 @@ class SubscriptionController extends Controller
             'ends_at' => $subscription->ends_at,
             'on_grace_period' => $subscription->onGracePeriod(),
             'renews_at' => $stripeSubscription->current_period_end
-                ? \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end)->toIso8601String()
+                ? Carbon::createFromTimestamp($stripeSubscription->current_period_end)->toIso8601String()
                 : null,
         ]);
     }

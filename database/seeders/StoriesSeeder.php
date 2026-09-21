@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class StoriesSeeder extends Seeder
@@ -12,7 +13,7 @@ class StoriesSeeder extends Seeder
     public function run(): void
     {
         // Get all users
-        $users = \App\Models\User::all();
+        $users = User::all();
 
         if ($users->isEmpty()) {
             return;

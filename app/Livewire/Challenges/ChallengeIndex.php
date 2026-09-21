@@ -5,6 +5,7 @@ namespace App\Livewire\Challenges;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Notifications\ChallengeCreated;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -270,7 +271,7 @@ class ChallengeIndex extends Component
         if ($this->perPage == -1) {
             $challenges = $this->getChallengesQuery()->get();
 
-            $challenges = new \Illuminate\Pagination\LengthAwarePaginator(
+            $challenges = new LengthAwarePaginator(
                 $challenges,
                 $challenges->count(),
                 $challenges->count(),

@@ -3,6 +3,7 @@
 namespace App\Livewire\Profile;
 
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class HeaderCard extends Component
@@ -25,7 +26,7 @@ class HeaderCard extends Component
         $this->phone = $this->user->profile?->phone ?? '';
     }
 
-    #[\Livewire\Attributes\On('profile-updated')]
+    #[On('profile-updated')]
     public function refreshUser()
     {
         $this->user->refresh();

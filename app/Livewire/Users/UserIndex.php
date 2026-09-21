@@ -3,6 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -321,7 +322,7 @@ class UserIndex extends Component
             $users = $this->getUsersQuery()->get();
 
             // Create a manual paginator for compatibility with the view
-            $users = new \Illuminate\Pagination\LengthAwarePaginator(
+            $users = new LengthAwarePaginator(
                 $users,
                 $users->count(),
                 $users->count(),

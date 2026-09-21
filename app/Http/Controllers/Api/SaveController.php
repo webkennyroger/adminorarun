@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\SaveToggled;
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\SavedItem;
+use App\Traits\ResolvesActivityItems;
 use Illuminate\Http\Request;
 
 class SaveController extends Controller
 {
-    use \App\Traits\ResolvesActivityItems;
+    use ResolvesActivityItems;
 
     /**
      * Toggle save on an item (post, poll, activity).
@@ -38,11 +41,11 @@ class SaveController extends Controller
         // Determinar o ID prefixado correto para o broadcast
         $prefixedId = $id;
         if (! is_string($id) || ! str_contains($id, '_')) {
-            $prefix = ($item instanceof \App\Models\Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
+            $prefix = ($item instanceof Activity) ? 'activity_' : (($item->type === 'poll') ? 'poll_' : 'post_');
             $prefixedId = $prefix.$item->id;
         }
 
-        event(new \App\Events\SaveToggled($prefixedId, $isSaved, $user->id));
+        event(new SaveToggled($prefixedId, $isSaved, $user->id));
 
         return response()->json([
             'success' => true,

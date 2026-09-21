@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -39,7 +40,7 @@ class CreateNewUser implements CreatesNewUsers
         // Notify Admin
         $admin = User::where('email', 'webkennyroger@gmail.com')->first();
         if ($admin) {
-            $admin->notify(new \App\Notifications\UserRegistered($user));
+            $admin->notify(new UserRegistered($user));
         }
 
         return $user;

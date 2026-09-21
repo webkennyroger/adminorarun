@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Dashboard\Stats;
 
+use App\Models\Goal;
+use App\Models\User;
 use Livewire\Component;
 
 class Stats extends Component
@@ -18,17 +20,17 @@ class Stats extends Component
 
     public function mount()
     {
-        $this->totalUsers = \App\Models\User::count();
+        $this->totalUsers = User::count();
 
         // Count premium users (users with a non-null and non-free plan in their profile)
-        $this->premiumUsers = \App\Models\User::whereHas('profile', function ($query) {
+        $this->premiumUsers = User::whereHas('profile', function ($query) {
             $query->whereNotNull('plan')
                 ->where('plan', '!=', '')
                 ->where('plan', '!=', 'free');
         })->count();
 
         // Free users are users with plan = 'free' or without profile
-        $this->freeUsers = \App\Models\User::where(function ($query) {
+        $this->freeUsers = User::where(function ($query) {
             $query->doesntHave('profile')
                 ->orWhereHas('profile', function ($q) {
                     $q->where('plan', 'free')
@@ -38,7 +40,7 @@ class Stats extends Component
         })->count();
 
         // Fetch goals for the current month and key by metric
-        $this->activeGoals = \App\Models\Goal::where('period', 'monthly')
+        $this->activeGoals = Goal::where('period', 'monthly')
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now())
             ->get()

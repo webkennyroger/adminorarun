@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,29 +32,29 @@ class AppServiceProvider extends ServiceProvider
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'portuguese');
 
         if ($this->app->environment('production')) {
-            \Illuminate\Support\Facades\URL::forceScheme('https');
+            URL::forceScheme('https');
         }
-        \Illuminate\Support\Facades\Gate::define('access-admin-panel', function (\App\Models\User $user) {
+        Gate::define('access-admin-panel', function (User $user) {
             return $user->isAdmin() || $user->isManager();
         });
 
-        \Illuminate\Support\Facades\Gate::define('access-goals', function (\App\Models\User $user) {
+        Gate::define('access-goals', function (User $user) {
             return $user->isAdmin() || ! $user->isManager();
         });
 
-        \Illuminate\Support\Facades\Gate::define('access-subscriptions', function (\App\Models\User $user) {
+        Gate::define('access-subscriptions', function (User $user) {
             return $user->isAdmin() || ! $user->isManager();
         });
 
-        \Illuminate\Support\Facades\Gate::define('manage-subscriptions', function (\App\Models\User $user) {
+        Gate::define('manage-subscriptions', function (User $user) {
             return $user->isSuperAdmin();
         });
 
-        \Illuminate\Support\Facades\Gate::define('manage-roles', function (\App\Models\User $user) {
+        Gate::define('manage-roles', function (User $user) {
             return $user->isSuperAdmin();
         });
 
-        \Illuminate\Support\Facades\Gate::define('manage-everything', function (\App\Models\User $user) {
+        Gate::define('manage-everything', function (User $user) {
             return $user->isSuperAdmin();
         });
     }

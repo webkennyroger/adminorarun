@@ -7,8 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\GoogleProvider;
 
 class AuthController extends Controller
 {
@@ -90,7 +92,7 @@ class AuthController extends Controller
 
             if ($request->filled('id_token')) {
                 // Verify ID Token via Google API
-                $response = \Illuminate\Support\Facades\Http::get('https://oauth2.googleapis.com/tokeninfo', [
+                $response = Http::get('https://oauth2.googleapis.com/tokeninfo', [
                     'id_token' => $request->id_token,
                 ]);
 
@@ -120,7 +122,7 @@ class AuthController extends Controller
                     'avatar' => $tokenData['picture'] ?? null,
                 ];
             } else {
-                /** @var \Laravel\Socialite\Two\GoogleProvider $driver */
+                /** @var GoogleProvider $driver */
                 $driver = Socialite::driver('google');
                 $user = $driver->stateless()->userFromToken($request->access_token);
                 $googleUser = (object) [
@@ -139,7 +141,6 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $googleUser->email)->first();
-
 
             if (! $user) {
                 $user = User::create([
@@ -172,7 +173,7 @@ class AuthController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Falha ao fazer login com Google: ' . $e->getMessage(),
+                'message' => 'Falha ao fazer login com Google: '.$e->getMessage(),
                 'error' => 'google_auth_failed',
             ], 401);
         }

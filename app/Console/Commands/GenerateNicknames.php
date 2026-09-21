@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class GenerateNicknames extends Command
             $counter = 1;
 
             // Ensure uniqueness
-            while (\App\Models\Profile::where('nickname', $nickname)->exists()) {
+            while (Profile::where('nickname', $nickname)->exists()) {
                 $nickname = $baseName.$counter;
                 $counter++;
             }

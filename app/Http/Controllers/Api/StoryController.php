@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StoryController extends Controller
 {
@@ -19,7 +21,7 @@ class StoryController extends Controller
 
         // Buscar usuários com stories ativos
         $now = now()->toDateTimeString();
-        $usersWithStories = \App\Models\User::whereIn('id', $followingIds)
+        $usersWithStories = User::whereIn('id', $followingIds)
             ->whereHas('stories', function ($query) use ($now) {
                 $query->where('expires_at', '>', $now);
             })
@@ -28,7 +30,7 @@ class StoryController extends Controller
             }, 'profile'])
             ->get();
 
-        \Illuminate\Support\Facades\Log::info("Stories fetch (API) at $now: Found " . $usersWithStories->count() . " users with stories.");
+        Log::info("Stories fetch (API) at $now: Found ".$usersWithStories->count().' users with stories.');
 
         $stories = $usersWithStories->map(function ($u) use ($user) {
             $userStories = $u->stories->map(function ($s) {
