@@ -1,11 +1,12 @@
 <div>
     <x-common.page-breadcrumb title="Denúncias" />
 
-    <div class="rounded-2xl border border-zinc-200 bg-white pt-4 dark:border-zinc-800 dark:bg-white/[0.03]">
-        <!-- Header -->
-        <div class="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <x-ui.card :padding="false">
+        <!-- Header / Filtros -->
+        <div class="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+            style="border-bottom: 1px solid var(--border-color);">
             <div class="flex items-center gap-3">
-                <span class="text-zinc-500 dark:text-zinc-400">Mostrar</span>
+                <span class="text-sm" style="color: var(--text-secondary);">Mostrar</span>
                 <div class="relative z-20 bg-transparent">
                     <div class="relative z-20 w-24">
                         <x-form.multiple-select wire:model.live="perPage" :multiple="false" :options="[
@@ -17,7 +18,7 @@
                         ]" />
                     </div>
                 </div>
-                <span class="text-zinc-500 dark:text-zinc-400">entradas</span>
+                <span class="text-sm" style="color: var(--text-secondary);">entradas</span>
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -34,265 +35,214 @@
                 <form>
                     <div class="relative">
                         <span class="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
-                            <svg class="fill-zinc-500 dark:fill-zinc-400" width="20" height="20" viewBox="0 0 20 20"
-                                fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M3.04175 9.37363C3.04175 5.87693 5.87711 3.04199 9.37508 3.04199C12.8731 3.04199 15.7084 5.87693 15.7084 9.37363C15.7084 12.8703 12.8731 15.7053 9.37508 15.7053C5.87711 15.7053 3.04175 12.8703 3.04175 9.37363ZM9.37508 1.54199C5.04902 1.54199 1.54175 5.04817 1.54175 9.37363C1.54175 13.6991 5.04902 17.2053 9.37508 17.2053C11.2674 17.2053 13.003 16.5344 14.357 15.4176L17.177 18.238C17.4699 18.5309 17.9448 18.5309 18.2377 18.238C18.5306 17.9451 18.5306 17.4703 18.2377 17.1774L15.418 14.3573C16.5365 13.0033 17.2084 11.2669 17.2084 9.37363C17.2084 5.04817 13.7011 1.54199 9.37508 1.54199Z"
-                                    fill="" />
-                            </svg>
+                            <x-ui.icon name="search" class="w-5 h-5" style="color: var(--text-muted);" />
                         </span>
                         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Pesquisar..."
-                            class="dark:bg-dark-900 h-11 w-full rounded-lg border border-zinc-200 bg-transparent py-2.5 pl-12 pr-4 text-sm text-zinc-800 shadow-theme-xs placeholder:text-zinc-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-zinc-800 dark:bg-white/3 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[300px]" />
+                            class="h-11 w-full rounded-lg py-2.5 pl-12 pr-4 text-sm focus:outline-hidden focus:ring-3 focus:ring-emerald-500/10 xl:w-[300px]"
+                            style="background-color: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary);" />
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="max-w-full px-5 overflow-x-auto">
-            <table class="min-w-full">
-                <thead class="border-t border-zinc-100 border-y bg-zinc-50 dark:bg-zinc-900">
-                    <tr class="border-zinc-200 border-y dark:border-zinc-700">
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Denunciante
-                        </th>
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Denunciado
-                        </th>
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Motivo
-                        </th>
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Status
-                        </th>
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Data
-                        </th>
-                        <th scope="col"
-                            class="px-4 py-3 font-normal text-zinc-500 text-start text-theme-sm dark:text-zinc-400">
-                            Ações
-                        </th>
+        <!-- Tabela -->
+        <div class="p-4">
+            <x-ui.data-table striped hoverable>
+                <x-slot:header>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Denunciante</th>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Denunciado</th>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Motivo</th>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Status</th>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Data</th>
+                    <th scope="col" class="px-4 py-3 font-normal text-start">Ações</th>
+                </x-slot:header>
+
+                @forelse ($reports as $report)
+                    <tr wire:key="{{ $report->id }}">
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <x-ui.text size="sm" variant="strong">
+                                {{ $report->reporter?->name ?? 'Usuário removido' }}
+                            </x-ui.text>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <x-ui.text size="sm">
+                                {{ $this->reportedContentLabel($report) }}
+                            </x-ui.text>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <x-ui.text size="sm">
+                                {{ $report->reason }}
+                            </x-ui.text>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            @if ($report->status === 'pending')
+                                <x-ui.badge variant="warning" size="sm">Pendente</x-ui.badge>
+                            @elseif ($report->status === 'reviewed')
+                                <x-ui.badge variant="info" size="sm">Revisada</x-ui.badge>
+                            @else
+                                <x-ui.badge variant="success" size="sm">Resolvida</x-ui.badge>
+                            @endif
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <x-ui.text size="sm" variant="muted">
+                                {{ $report->created_at->format('d/m/Y H:i') }}
+                            </x-ui.text>
+                        </td>
+                        <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                            <button type="button" wire:click="view({{ $report->id }})" title="Ver detalhes"
+                                class="inline-flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-[var(--bg-hover)]"
+                                style="color: var(--text-secondary);">
+                                <x-ui.icon name="eye" class="w-5 h-5" />
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
-                    @forelse($reports as $report)
-                        <tr wire:key="{{ $report->id }}"
-                            class="hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors duration-200">
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-zinc-800 dark:text-zinc-100">
-                                    {{ $report->reporter?->name ?? 'Usuário removido' }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-zinc-500 dark:text-zinc-400">
-                                    {{ $this->reportedContentLabel($report) }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-zinc-500 dark:text-zinc-400">
-                                    {{ $report->reason }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                @if ($report->status === 'pending')
-                                    <span
-                                        class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                        Pendente
-                                    </span>
-                                @elseif ($report->status === 'reviewed')
-                                    <span
-                                        class="inline-flex rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                        Revisada
-                                    </span>
-                                @else
-                                    <span
-                                        class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                        Resolvida
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-zinc-500 dark:text-zinc-400">
-                                    {{ $report->created_at->format('d/m/Y H:i') }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                <button wire:click="view({{ $report->id }})"
-                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none cursor-pointer hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 rounded-[50%] text-blue-500 bg-primary/10">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-eye w-5 h-5">
-                                        <path
-                                            d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-                                        </path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-zinc-500">
-                                Nenhuma denúncia encontrada
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                @empty
+                    <tr>
+                        <td colspan="6" class="p-0">
+                            <x-ui.empty-state title="Nenhuma denúncia encontrada"
+                                description="Não há denúncias para os filtros selecionados." />
+                        </td>
+                    </tr>
+                @endforelse
+            </x-ui.data-table>
         </div>
-        <!-- Pagination -->
-        <div
-            class="flex items-center flex-col sm:flex-row justify-between border-t border-zinc-200 px-5 py-4 dark:border-zinc-800">
-            {{ $reports->links('components.pagination.custom') }}
+
+        <!-- Paginação -->
+        <div class="px-5 py-4" style="border-top: 1px solid var(--border-color);">
+            <x-ui.pagination :paginator="$reports" />
         </div>
-    </div>
+    </x-ui.card>
 
     {{-- View / Moderation Modal --}}
     @if ($showViewModal && $selectedReport)
-        <div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
-            wire:click="closeViewModal">
-            <div class="bg-white dark:bg-zinc-900 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
-                wire:click.stop>
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Detalhes da Denúncia</h3>
-                    <button wire:click="closeViewModal"
-                        class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+        <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+            style="background-color: rgba(0, 0, 0, 0.5);" wire:click="closeViewModal">
+            <div class="w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl"
+                style="background-color: var(--bg-surface); border: 1px solid var(--border-color);" wire:click.stop>
+                <div class="flex items-center justify-between px-6 py-4"
+                    style="border-bottom: 1px solid var(--border-color);">
+                    <x-ui.heading size="md">Detalhes da Denúncia</x-ui.heading>
+                    <button type="button" wire:click="closeViewModal" title="Fechar"
+                        class="inline-flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-[var(--bg-hover)]"
+                        style="color: var(--text-secondary);">
+                        <x-ui.icon name="x-mark" class="w-5 h-5" />
                     </button>
                 </div>
 
-                <div class="space-y-4">
+                <div class="px-6 py-5 space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Denunciante</label>
-                            <p class="text-zinc-900 dark:text-zinc-100">
-                                {{ $selectedReport->reporter?->name ?? 'Usuário removido' }}
-                            </p>
+                            <x-ui.text size="sm" variant="muted">Denunciante</x-ui.text>
+                            <div class="flex items-center gap-2 mt-1">
+                                <x-ui.avatar size="sm" :name="$selectedReport->reporter?->name" />
+                                <x-ui.text variant="strong">
+                                    {{ $selectedReport->reporter?->name ?? 'Usuário removido' }}
+                                </x-ui.text>
+                            </div>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Status</label>
-                            <p class="text-zinc-900 dark:text-zinc-100">
+                            <x-ui.text size="sm" variant="muted">Status</x-ui.text>
+                            <div class="mt-1">
                                 @if ($selectedReport->status === 'pending')
-                                    <span
-                                        class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                        Pendente
-                                    </span>
+                                    <x-ui.badge variant="warning" size="sm">Pendente</x-ui.badge>
                                 @elseif ($selectedReport->status === 'reviewed')
-                                    <span
-                                        class="inline-flex rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                        Revisada
-                                    </span>
+                                    <x-ui.badge variant="info" size="sm">Revisada</x-ui.badge>
                                 @else
-                                    <span
-                                        class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                        Resolvida
-                                    </span>
+                                    <x-ui.badge variant="success" size="sm">Resolvida</x-ui.badge>
                                 @endif
-                            </p>
+                            </div>
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Denunciado</label>
-                        <p class="text-zinc-900 dark:text-zinc-100">
+                        <x-ui.text size="sm" variant="muted">Denunciado</x-ui.text>
+                        <x-ui.text variant="strong">
                             {{ $this->reportedContentLabel($selectedReport) }}
-                        </p>
+                        </x-ui.text>
                     </div>
 
                     <div>
-                        <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Motivo</label>
-                        <p class="text-zinc-900 dark:text-zinc-100">{{ $selectedReport->reason }}</p>
+                        <x-ui.text size="sm" variant="muted">Motivo</x-ui.text>
+                        <x-ui.text variant="strong">{{ $selectedReport->reason }}</x-ui.text>
                     </div>
 
                     @if ($selectedReport->details)
                         <div>
-                            <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Detalhes</label>
-                            <p class="text-zinc-900 dark:text-zinc-100 whitespace-pre-line">{{ $selectedReport->details }}</p>
+                            <x-ui.text size="sm" variant="muted">Detalhes</x-ui.text>
+                            <x-ui.text class="whitespace-pre-line">{{ $selectedReport->details }}</x-ui.text>
                         </div>
                     @endif
 
                     <div>
-                        <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Data</label>
-                        <p class="text-zinc-900 dark:text-zinc-100">
+                        <x-ui.text size="sm" variant="muted">Data</x-ui.text>
+                        <x-ui.text variant="strong">
                             {{ $selectedReport->created_at->format('d/m/Y H:i') }}
-                        </p>
+                        </x-ui.text>
                     </div>
 
                     {{-- Conteúdo denunciado --}}
-                    <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-white/5">
-                        <label class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Conteúdo denunciado</label>
-
+                    <x-ui.alert variant="warning" title="Conteúdo denunciado">
                         @if ($selectedReport->reportable_type && $selectedReport->reportable)
                             @php $reportableType = class_basename($selectedReport->reportable_type); @endphp
                             @if ($reportableType === 'Post')
-                                <p class="mt-1 font-medium text-zinc-900 dark:text-zinc-100">
+                                <p class="font-medium" style="color: var(--text-primary);">
                                     {{ $selectedReport->reportable->title }}
                                 </p>
-                                <p class="mt-1 text-zinc-700 dark:text-zinc-300 whitespace-pre-line">
+                                <p class="mt-1 whitespace-pre-line">
                                     {{ strip_tags((string) $selectedReport->reportable->content) }}
                                 </p>
                             @elseif ($reportableType === 'Comment')
-                                <p class="mt-1 text-zinc-700 dark:text-zinc-300 whitespace-pre-line">
+                                <p class="whitespace-pre-line">
                                     {{ $selectedReport->reportable->body }}
                                 </p>
                             @else
-                                <p class="mt-1 text-zinc-700 dark:text-zinc-300">{{ $reportableType }}</p>
+                                <p>{{ $reportableType }}</p>
                             @endif
                         @elseif ($selectedReport->reportable_type)
-                            <p class="mt-1 text-zinc-500 dark:text-zinc-400 italic">
-                                Este conteúdo já foi excluído.
-                            </p>
+                            <p class="italic">Este conteúdo já foi excluído.</p>
                         @elseif ($selectedReport->reportedMessage)
-                            <p class="mt-1 text-zinc-700 dark:text-zinc-300 whitespace-pre-line">
-                                {{ $selectedReport->reportedMessage->content }}
-                            </p>
+                            <p class="whitespace-pre-line">{{ $selectedReport->reportedMessage->content }}</p>
                         @elseif ($selectedReport->reportedUser)
-                            <p class="mt-1 font-medium text-zinc-900 dark:text-zinc-100">
+                            <p class="font-medium" style="color: var(--text-primary);">
                                 {{ $selectedReport->reportedUser->name }}
                             </p>
-                            <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                                {{ $selectedReport->reportedUser->email }}
-                            </p>
+                            <p class="mt-1">{{ $selectedReport->reportedUser->email }}</p>
                         @else
-                            <p class="mt-1 text-zinc-500 dark:text-zinc-400 italic">Nenhum conteúdo associado.</p>
+                            <p class="italic">Nenhum conteúdo associado.</p>
                         @endif
-                    </div>
+                    </x-ui.alert>
                 </div>
 
-                <div class="flex flex-wrap justify-end gap-3 pt-6">
+                <div class="flex flex-wrap justify-end gap-3 px-6 py-4"
+                    style="border-top: 1px solid var(--border-color);">
                     @if ($selectedReport->reportedUser)
-                        <button wire:click="banReportedUser({{ $selectedReport->id }})"
+                        <button type="button" wire:click="banReportedUser({{ $selectedReport->id }})"
                             wire:confirm="Tem certeza que deseja banir este usuário?"
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                            style="background-color: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
                             Banir usuário
                         </button>
                     @endif
 
                     @if ($selectedReport->reportable)
-                        <button wire:click="deleteReportable({{ $selectedReport->id }})"
+                        <button type="button" wire:click="deleteReportable({{ $selectedReport->id }})"
                             wire:confirm="Tem certeza que deseja excluir o conteúdo denunciado?"
-                            class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+                            class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                            style="background-color: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
                             Excluir conteúdo
                         </button>
                     @endif
 
                     @if ($selectedReport->status !== 'resolved')
-                        <button wire:click="markResolved({{ $selectedReport->id }})"
-                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <button type="button" wire:click="markResolved({{ $selectedReport->id }})"
+                            class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition-all hover:from-emerald-400 hover:to-teal-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
                             Marcar como resolvida
                         </button>
                     @endif
 
                     <button type="button" wire:click="closeViewModal"
-                        class="px-4 py-2 bg-zinc-200 text-zinc-800 rounded-lg hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200">
+                        class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                        style="background-color: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-color);">
                         Fechar
                     </button>
                 </div>
