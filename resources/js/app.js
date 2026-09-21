@@ -13,6 +13,40 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+// Tiptap (x-editor.tiptap): importado aqui, não dentro do @script do
+// componente, porque só o que passa pelo entrypoint do Vite (este
+// arquivo) é de fato empacotado — um `import '@tiptap/core'` cru dentro
+// de um <script> injetado em runtime pelo Livewire não resolveria no
+// build de produção (o navegador não entende specifiers "bare" sem um
+// import map). Expostos em window.TiptapKit pro @script só consumir.
+import { Editor } from "@tiptap/core";
+import StarterKit from "@tiptap/starter-kit";
+import TiptapImage from "@tiptap/extension-image";
+import TiptapLink from "@tiptap/extension-link";
+import TiptapPlaceholder from "@tiptap/extension-placeholder";
+import TiptapTextAlign from "@tiptap/extension-text-align";
+import TiptapUnderline from "@tiptap/extension-underline";
+import TiptapHighlight from "@tiptap/extension-highlight";
+import TiptapTable from "@tiptap/extension-table";
+import TiptapTableRow from "@tiptap/extension-table-row";
+import TiptapTableCell from "@tiptap/extension-table-cell";
+import TiptapTableHeader from "@tiptap/extension-table-header";
+
+window.TiptapKit = {
+    Editor,
+    StarterKit,
+    Image: TiptapImage,
+    Link: TiptapLink,
+    Placeholder: TiptapPlaceholder,
+    TextAlign: TiptapTextAlign,
+    Underline: TiptapUnderline,
+    Highlight: TiptapHighlight,
+    Table: TiptapTable,
+    TableRow: TiptapTableRow,
+    TableCell: TiptapTableCell,
+    TableHeader: TiptapTableHeader,
+};
+
 // Stores
 
 import { initSidebarStore } from "./components/sidebar";
