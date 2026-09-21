@@ -1,16 +1,17 @@
 <div>
     @if ($showModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" 
-             aria-labelledby="modal-title" 
-             role="dialog" 
+        <div class="fixed inset-0 z-50 overflow-y-auto"
+             aria-labelledby="modal-title"
+             role="dialog"
              aria-modal="true">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                 <!-- Background overlay -->
-                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75" 
+                <div class="fixed inset-0 backdrop-blur-sm" style="background-color: rgba(0, 0, 0, 0.5);"
                      wire:click="closeModal" aria-hidden="true"></div>
 
                 <!-- Modal panel -->
-                <div class="inline-block align-bottom bg-white dark:bg-zinc-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="inline-block align-bottom rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                     style="background-color: var(--bg-surface); border: 1px solid var(--border-color);">
                     @if($confirmingDeletion)
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-4">
@@ -20,52 +21,43 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Confirmar Exclusão</h3>
-                                    <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                                    <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Confirmar Exclusão</h3>
+                                    <p class="text-sm mt-1" style="color: var(--text-secondary);">
                                         Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex justify-end gap-3 pt-5">
-                                <button type="button" wire:click="cancelDelete" 
-                                    class="px-4 py-2 bg-zinc-200 text-zinc-800 rounded-lg hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200">
+                                <x-ui.button type="button" variant="secondary" wire:click="cancelDelete">
                                     Cancelar
-                                </button>
-                                <button wire:click="deleteEvent" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                                </x-ui.button>
+                                <x-ui.button variant="danger" wire:click="deleteEvent">
                                     Sim, Excluir
-                                </button>
+                                </x-ui.button>
                             </div>
                         </div>
                     @else
                         <form wire:submit.prevent="saveEvent">
-                            <div class="bg-white dark:bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div class="mb-4">
-                                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white" id="modal-title">
+                                    <h3 class="text-lg font-medium leading-6" style="color: var(--text-primary);" id="modal-title">
                                         {{ $editMode ? 'Editar Evento' : 'Criar Novo Evento' }}
                                     </h3>
                                 </div>
 
                                 <!-- Title -->
                                 <div class="mb-4">
-                                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Título <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="title" 
-                                           wire:model.defer="title"
-                                           class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-800 dark:text-white"
-                                           placeholder="Nome do evento">
-                                    @error('title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    <x-ui.field label="Título" :error="$errors->first('title')">
+                                        <x-ui.input type="text" id="title" wire:model.defer="title" placeholder="Nome do evento" />
+                                    </x-ui.field>
                                 </div>
 
                                 <!-- Description -->
                                 <div class="mb-4">
-                                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Descrição
-                                    </label>
-                                    <x-form.text-area id="description" wire:model.defer="description" height="h-32" placeholder="Descrição do evento" />
-                                    @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    <x-ui.field label="Descrição" :error="$errors->first('description')">
+                                        <x-ui.textarea id="description" wire:model.defer="description" rows="4" placeholder="Descrição do evento" />
+                                    </x-ui.field>
                                 </div>
 
                                 <!-- Date and Time -->
@@ -102,72 +94,62 @@
 
                                 <!-- Color Picker -->
                                 <div class="mb-4">
-                                    <label for="color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Cor do Evento <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="flex items-center gap-3">
-                                        <input type="color" 
-                                               id="color" 
-                                               wire:model.defer="color"
-                                               class="h-10 w-20 cursor-pointer rounded border border-gray-300 dark:border-zinc-700">
-                                        <span class="text-sm text-gray-600 dark:text-gray-400">{{ $color }}</span>
-                                    </div>
-                                    @error('color') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    <x-ui.field label="Cor do Evento" :error="$errors->first('color')">
+                                        <div class="flex items-center gap-3">
+                                            <input type="color"
+                                                   id="color"
+                                                   wire:model.defer="color"
+                                                   class="h-10 w-20 cursor-pointer rounded border border-gray-300 dark:border-zinc-700">
+                                            <span class="text-sm" style="color: var(--text-secondary);">{{ $color }}</span>
+                                        </div>
+                                    </x-ui.field>
                                 </div>
 
                                 <!-- Photo Upload -->
                                 <div class="mb-4">
-                                    <label for="photo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Foto do Evento
-                                    </label>
-                                    
-                                    @if($existingPhoto && !$photo)
-                                        <div class="mb-3">
-                                            <img src="{{ asset('storage/' . $existingPhoto) }}" 
-                                                 alt="Foto atual" 
-                                                 class="h-32 w-32 object-cover rounded-md border border-gray-300 dark:border-zinc-700">
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Foto atual</p>
-                                        </div>
-                                    @endif
+                                    <x-ui.field label="Foto do Evento" :error="$errors->first('photo')">
+                                        @if($existingPhoto && !$photo)
+                                            <div class="mb-3">
+                                                <img src="{{ asset('storage/' . $existingPhoto) }}"
+                                                     alt="Foto atual"
+                                                     class="h-32 w-32 object-cover rounded-md border border-gray-300 dark:border-zinc-700">
+                                                <p class="text-xs mt-1" style="color: var(--text-muted);">Foto atual</p>
+                                            </div>
+                                        @endif
 
-                                    @if($photo)
-                                        <div class="mb-3">
-                                            <img src="{{ $photo->temporaryUrl() }}" 
-                                                 alt="Preview" 
-                                                 class="h-32 w-32 object-cover rounded-md border border-gray-300 dark:border-zinc-700">
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Nova foto</p>
-                                        </div>
-                                    @endif
+                                        @if($photo)
+                                            <div class="mb-3">
+                                                <img src="{{ $photo->temporaryUrl() }}"
+                                                     alt="Preview"
+                                                     class="h-32 w-32 object-cover rounded-md border border-gray-300 dark:border-zinc-700">
+                                                <p class="text-xs mt-1" style="color: var(--text-muted);">Nova foto</p>
+                                            </div>
+                                        @endif
 
-                                    <x-form.file-input wire:model="photo" id="event_photo" accept="image/*" />
-                                    @error('photo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                    
-                                    <div wire:loading wire:target="photo" class="text-sm text-blue-500 mt-1">
-                                        Carregando...
-                                    </div>
+                                        <x-form.file-input wire:model="photo" id="event_photo" accept="image/*" />
+
+                                        <div wire:loading wire:target="photo" class="text-sm text-blue-500 mt-1">
+                                            Carregando...
+                                        </div>
+                                    </x-ui.field>
                                 </div>
                             </div>
 
                             <!-- Modal Actions -->
-                            <div class="bg-gray-50 dark:bg-zinc-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
-                                <button type="submit"
-                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2" style="background-color: var(--bg-elevated); border-top: 1px solid var(--border-color);">
+                                <x-ui.button type="submit" class="w-full sm:w-auto !justify-center">
                                     {{ $editMode ? 'Atualizar' : 'Criar' }}
-                                </button>
-                                
+                                </x-ui.button>
+
                                 @if($editMode)
-                                    <button type="button"
-                                            wire:click="confirmDelete"
-                                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
+                                    <x-ui.button type="button" variant="danger" wire:click="confirmDelete" class="w-full sm:w-auto !justify-center">
                                         Excluir
-                                    </button>
+                                    </x-ui.button>
                                 @endif
-                                
-                                <button type="button"
-                                        wire:click="closeModal"
-                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-zinc-600 shadow-sm px-4 py-2 bg-white dark:bg-zinc-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm">
-                                        Cancelar
-                                </button>
+
+                                <x-ui.button type="button" variant="secondary" wire:click="closeModal" class="mt-3 sm:mt-0 w-full sm:w-auto !justify-center">
+                                    Cancelar
+                                </x-ui.button>
                             </div>
                         </form>
                     @endif

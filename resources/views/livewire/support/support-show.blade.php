@@ -1,45 +1,58 @@
 <div>
     <x-common.page-breadcrumb pageTitle="Detalhes do Ticket" />
 
+    @php
+        $statusVariant = match ($status) {
+            'resolved', 'solved' => 'success',
+            'closed' => 'danger',
+            'pending' => 'warning',
+            default => 'info',
+        };
+        $statusLabel = match ($status) {
+            'open' => 'Aberto',
+            'pending' => 'Pendente',
+            'resolved', 'solved' => 'Resolvido',
+            'closed' => 'Fechado',
+            default => ucfirst($status),
+        };
+        $priorityVariant = match ($support->priority) {
+            'high' => 'danger',
+            'medium' => 'warning',
+            default => 'success',
+        };
+        $priorityLabel = match ($support->priority) {
+            'high' => 'Alta',
+            'medium' => 'Média',
+            'low' => 'Baixa',
+            default => ucfirst($support->priority),
+        };
+    @endphp
+
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <!-- Ticket Details & Conversation -->
         <div class="xl:col-span-2 space-y-6">
             <!-- Ticket Header -->
-            <div class="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-white/[0.03]">
+            <x-ui.card>
                 <div class="mb-6 flex items-start justify-between">
                     <div>
                         <div class="mb-2 flex items-center gap-3">
-                            <h2 class="text-xl font-semibold text-zinc-800 dark:text-white/90">
+                            <h2 class="text-xl font-semibold" style="color: var(--text-primary);">
                                 {{ $support->subject }}
                             </h2>
-                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                                @if($status === 'solved' || $status === 'resolved') bg-green-50 text-green-700 dark:bg-green-500/15 dark:text-green-500
-                                @elseif($status === 'closed') bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-500
-                                @elseif($status === 'pending') bg-orange-50 text-orange-700 dark:bg-orange-500/15 dark:text-orange-500
-                                @else bg-blue-50 text-blue-700 dark:bg-blue-500/15 dark:text-blue-500 @endif">
-                                {{ 
-                                    match ($status) {
-        'open' => 'Aberto',
-        'pending' => 'Pendente',
-        'resolved', 'solved' => 'Resolvido',
-        'closed' => 'Fechado',
-        default => ucfirst($status)
-    }
-                                }}
-                            </span>
+                            <x-ui.badge :variant="$statusVariant" size="sm">
+                                {{ $statusLabel }}
+                            </x-ui.badge>
                         </div>
-                        <div class="flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
+                        <div class="flex items-center gap-4 text-sm" style="color: var(--text-secondary);">
                             <span class="flex items-center gap-1.5">
-                                <svg class="h-4 w-4 text-blue-700 dark:bg-blue-500/15" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                                 </svg>
                                 {{ $support->ticket_id }}
                             </span>
                             <span class="flex items-center gap-1.5">
-                                <svg class="h-4 w-4 text-blue-700 dark:bg-blue-500/15" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -47,43 +60,39 @@
                             </span>
                         </div>
                     </div>
-                    <a href="{{ route('support.index') }}" wire:navigate
-                        class="flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-white/[0.03]">
+                    <x-ui.button variant="secondary" size="sm" :href="route('support.index')" wire:navigate>
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                         Voltar
-                    </a>
+                    </x-ui.button>
                 </div>
 
-                <div class="prose prose-sm max-w-none text-zinc-600 dark:text-zinc-400">
+                <div class="prose prose-sm max-w-none" style="color: var(--text-secondary);">
                     <p class="whitespace-pre-wrap">{!! $support->message !!}</p>
                 </div>
-            </div>
+            </x-ui.card>
 
             <!-- Conversation History -->
             <div class="space-y-6">
-                <h3 class="text-lg font-medium text-zinc-800 dark:text-white/90">Histórico da Conversa</h3>
+                <h3 class="text-lg font-medium" style="color: var(--text-primary);">Histórico da Conversa</h3>
 
                 @foreach($support->replies as $reply)
-                    <div class="flex gap-4 {{ $reply->user_id === auth()->id() ? 'flex-row-reverse' : '' }}">
+                    @php $isOwnReply = $reply->user_id === auth()->id(); @endphp
+                    <div class="flex gap-4 {{ $isOwnReply ? 'flex-row-reverse' : '' }}">
                         <div class="flex-shrink-0">
-                            <div
-                                class="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-sm font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                                {{ substr($reply->user->name, 0, 2) }}
-                            </div>
+                            <x-ui.avatar :name="$reply->user->name" size="md" />
                         </div>
-                        <div
-                            class="flex max-w-[80%] flex-col {{ $reply->user_id === auth()->id() ? 'items-end' : 'items-start' }}">
-                            <div
-                                class="rounded-2xl px-6 py-4 {{ $reply->user_id === auth()->id() ? 'bg-brand-500 text-white' : 'bg-white border border-zinc-200 dark:bg-white/[0.03] dark:border-zinc-800' }}">
-                                <p
-                                    class="whitespace-pre-wrap text-sm {{ $reply->user_id === auth()->id() ? 'text-white' : 'text-zinc-600 dark:text-zinc-300' }}">
+                        <div class="flex max-w-[80%] flex-col {{ $isOwnReply ? 'items-end' : 'items-start' }}">
+                            <div class="rounded-2xl px-6 py-4 {{ $isOwnReply ? 'bg-emerald-500 text-white' : '' }}"
+                                @unless($isOwnReply) style="background-color: var(--bg-card); border: 1px solid var(--border-color);" @endunless>
+                                <p class="whitespace-pre-wrap text-sm {{ $isOwnReply ? 'text-white' : '' }}"
+                                    @unless($isOwnReply) style="color: var(--text-secondary);" @endunless>
                                     {!! $reply->message !!}
                                 </p>
                             </div>
-                            <span class="mt-1.5 text-xs text-zinc-400">
+                            <span class="mt-1.5 text-xs" style="color: var(--text-muted);">
                                 {{ $reply->created_at->format('d/m/Y H:i') }}
                             </span>
                         </div>
@@ -92,103 +101,70 @@
             </div>
 
             <!-- Reply Form -->
-            <div class="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-white/[0.03]">
-                <h3 class="mb-4 text-lg font-medium text-zinc-800 dark:text-white/90">
+            <x-ui.card>
+                <h3 class="mb-4 text-lg font-medium" style="color: var(--text-primary);">
                     Responder
                 </h3>
                 <form action="{{ route('support.reply', $support->id) }}" method="POST">
                     @csrf
-                    <div class="mb-4">
-                        <x-form.text-area name="message" :value="old('message')" height="h-32"
-                            placeholder="Digite sua resposta..." />
-                        @error('message') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="flex items-center justify-center rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">
+                    <x-ui.field :error="$errors->first('message')">
+                        <x-ui.textarea name="message" rows="5" placeholder="Digite sua resposta...">{{ old('message') }}</x-ui.textarea>
+                    </x-ui.field>
+                    <div class="flex justify-end mt-4">
+                        <x-ui.button type="submit">
                             Enviar Resposta
-                        </button>
+                        </x-ui.button>
                     </div>
                 </form>
-            </div>
+            </x-ui.card>
         </div>
 
         <!-- Sidebar Info -->
         <div class="xl:col-span-1">
-            <div
-                class="sticky top-6 rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-white/[0.03]">
-                <h3 class="mb-4 text-lg font-medium text-zinc-800 dark:text-white/90">
+            <x-ui.card class="sticky top-6">
+                <h3 class="mb-4 text-lg font-medium" style="color: var(--text-primary);">
                     Informações
                 </h3>
-                <div>
-                    <label class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-400">
-                        Status
-                    </label>
-                    @if(auth()->user()->is_admin)
-                                    <form action="{{ route('support.update-status', $support->id) }}" method="POST" class="space-y-2">
-                                        @csrf
-                                        @method('PATCH')
-                                        <div class="relative">
-                                            <x-form.multiple-select name="status" :multiple="false" :value="$support->status"
-                                                :options="[
-                            ['value' => 'open', 'label' => 'Aberto'],
-                            ['value' => 'pending', 'label' => 'Pendente'],
-                            ['value' => 'resolved', 'label' => 'Resolvido'],
-                            ['value' => 'closed', 'label' => 'Fechado']
-                        ]" />
-                                        </div>
-                                        <button type="submit"
-                                            class="w-full rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600">
-                                            Salvar Status
-                                        </button>
-                                    </form>
-                    @else
-                                    <span
-                                        class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
-                                                                                                                @if($status === 'solved' || $status === 'resolved') bg-green-50 text-green-700 dark:bg-green-500/15 dark:text-green-500
-                                                                                                                @elseif($status === 'closed') bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-500
-                                                                                                                @elseif($status === 'pending') bg-orange-50 text-orange-700 dark:bg-orange-500/15 dark:text-orange-500
-                                                                                                                @else bg-blue-50 text-blue-700 dark:bg-blue-500/15 dark:text-blue-500 @endif">
-                                        {{ 
-                                                                                                                    match ($status) {
-                            'open' => 'Aberto',
-                            'pending' => 'Pendente',
-                            'resolved', 'solved' => 'Resolvido',
-                            'closed' => 'Fechado',
-                            default => ucfirst($status)
-                        }
-                                                                                                                }}
-                                    </span>
-                    @endif
+                <div class="mb-4">
+                    <x-ui.field label="Status">
+                        @if(auth()->user()->is_admin)
+                            <form action="{{ route('support.update-status', $support->id) }}" method="POST" class="space-y-2">
+                                @csrf
+                                @method('PATCH')
+                                <x-ui.select name="status" :placeholder="false">
+                                    <option value="open" @selected($support->status === 'open')>Aberto</option>
+                                    <option value="pending" @selected($support->status === 'pending')>Pendente</option>
+                                    <option value="resolved" @selected($support->status === 'resolved')>Resolvido</option>
+                                    <option value="closed" @selected($support->status === 'closed')>Fechado</option>
+                                </x-ui.select>
+                                <x-ui.button type="submit" class="w-full !justify-center">
+                                    Salvar Status
+                                </x-ui.button>
+                            </form>
+                        @else
+                            <x-ui.badge :variant="$statusVariant" size="sm">
+                                {{ $statusLabel }}
+                            </x-ui.badge>
+                        @endif
+                    </x-ui.field>
                 </div>
-                <div>
-                    <p class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-400">
+                <div class="mb-4">
+                    <p class="mb-1.5 block text-sm font-medium" style="color: var(--text-secondary);">
                         Prioridade
                     </p>
-                    <span class="text-theme-xs rounded-full px-2 py-0.5 font-medium
-                            @if($support->priority === 'high') bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-500
-                            @elseif($support->priority === 'medium') bg-orange-50 dark:bg-orange-500/15 text-orange-600 dark:text-orange-500
-                            @else bg-green-50 dark:bg-green-500/15 text-green-600 dark:text-green-500 @endif">
-                        {{ 
-                                match ($support->priority) {
-        'high' => 'Alta',
-        'medium' => 'Média',
-        'low' => 'Baixa',
-        default => ucfirst($support->priority)
-    }
-                            }}
-                    </span>
+                    <x-ui.badge :variant="$priorityVariant" size="sm">
+                        {{ $priorityLabel }}
+                    </x-ui.badge>
                 </div>
                 <div>
-                    <p class="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-400">
+                    <p class="mb-1.5 block text-sm font-medium" style="color: var(--text-secondary);">
                         Última Atualização
                     </p>
-                    <span class="mt-1 text-sm font-medium text-zinc-800 dark:text-white">
+                    <span class="mt-1 text-sm font-medium" style="color: var(--text-primary);">
                         {{ $support->updated_at->diffForHumans() }}
                     </span>
                 </div>
-            </div>
+            </x-ui.card>
         </div>
     </div>
-</div>
 </div>

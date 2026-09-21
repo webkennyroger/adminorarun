@@ -1,18 +1,17 @@
 <div wire:ignore>
     <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
         <x-common.page-breadcrumb pageTitle="Calendário" />
-        <button
-            class="btn-create-main px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium flex items-center gap-2">
+        <x-ui.button variant="primary" class="btn-create-main">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
             Novo Evento
-        </button>
+        </x-ui.button>
     </div>
 
-    <div class="rounded-2xl border border-zinc-200 bg-white pt-4 dark:border-zinc-800 dark:bg-zinc-900">
+    <x-ui.card :padding="false">
         <div id="calendar" class="p-4 min-h-[600px]"></div>
-    </div>
+    </x-ui.card>
 
     <!-- Modal de Criar/Editar Evento -->
     <div id="eventModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50"
