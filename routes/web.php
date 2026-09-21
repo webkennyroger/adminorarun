@@ -6,10 +6,17 @@ use App\Http\Controllers\MaintenanceController;
 use App\Livewire\Activities\ActivityList;
 use App\Livewire\Categories\CategoryIndex;
 use App\Livewire\Challenges\ChallengeIndex;
+use App\Livewire\Chat\ChatIndex;
+use App\Livewire\Clubs\ClubIndex;
+use App\Livewire\Comments\CommentIndex;
+use App\Livewire\Feed\FeedIndex;
 use App\Livewire\Goals\GoalIndex;
 use App\Livewire\Plans\PlanIndex;
 use App\Livewire\Profile\UserProfileEdit;
+use App\Livewire\Reports\ReportIndex;
 use App\Livewire\Schedule\ScheduleIndex;
+use App\Livewire\Segments\SegmentIndex;
+use App\Livewire\Stories\StoryIndex;
 use App\Livewire\Support\SupportIndex;
 use App\Livewire\Support\SupportList;
 use App\Livewire\Support\SupportShow;
@@ -117,6 +124,15 @@ Route::middleware(['auth', 'check.admin.or.manager'])->group(function () {
 
     // Rota de Gerenciamento de Desafios Mensais (Admin)
     Route::get('/admin/challenges', ChallengeIndex::class)->name('admin.challenges.index');
+
+    // Sincronização total com o app — feed, moderação e comunidade (Admin)
+    Route::get('/admin/feed', FeedIndex::class)->name('admin.feed.index');
+    Route::get('/admin/comments', CommentIndex::class)->name('admin.comments.index');
+    Route::get('/admin/clubs', ClubIndex::class)->name('admin.clubs.index');
+    Route::get('/admin/chat', ChatIndex::class)->name('admin.chat.index');
+    Route::get('/admin/stories', StoryIndex::class)->name('admin.stories.index');
+    Route::get('/admin/segments', SegmentIndex::class)->name('admin.segments.index');
+    Route::get('/admin/reports', ReportIndex::class)->name('admin.reports.index');
 
     // Rota de Gerenciamento de Categorias
     Route::get('/categories', CategoryIndex::class)->name('categories.index');

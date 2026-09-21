@@ -2,6 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Models\Message;
+use App\Models\Report;
+use Illuminate\Support\Facades\Gate;
+
 class MenuHelper
 {
     public static function getMainNavItems()
@@ -21,7 +25,7 @@ class MenuHelper
                 'name' => 'Chat',
                 'path' => '/chat',
                 // Using a closure or direct count if performant enough. For now direct.
-                'badge' => auth()->check() ? \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count() : 0,
+                'badge' => auth()->check() ? Message::where('receiver_id', auth()->id())->whereNull('read_at')->count() : 0,
             ];
 
             $items[] = [
@@ -72,9 +76,9 @@ class MenuHelper
             $items[] = [
                 'icon' => 'chat',
                 'name' => 'Chat',
-                'path' => '/chat',
+                'path' => '/admin/chat',
                 // Using a closure or direct count if performant enough. For now direct.
-                'badge' => auth()->check() ? \App\Models\Message::where('receiver_id', auth()->id())->whereNull('read_at')->count() : 0,
+                'badge' => auth()->check() ? Message::where('receiver_id', auth()->id())->whereNull('read_at')->count() : 0,
             ];
 
             $items[] = [
@@ -90,12 +94,49 @@ class MenuHelper
             ];
 
             $items[] = [
+                'icon' => 'pages',
+                'name' => 'Feed (Posts/Enquetes)',
+                'path' => '/admin/feed',
+            ];
+
+            $items[] = [
+                'icon' => 'email',
+                'name' => 'Comentários',
+                'path' => '/admin/comments',
+            ];
+
+            $items[] = [
+                'icon' => 'ecommerce',
+                'name' => 'Clubes',
+                'path' => '/admin/clubs',
+            ];
+
+            $items[] = [
+                'icon' => 'charts',
+                'name' => 'Stories',
+                'path' => '/admin/stories',
+            ];
+
+            $items[] = [
+                'icon' => 'ui-elements',
+                'name' => 'Segments',
+                'path' => '/admin/segments',
+            ];
+
+            $items[] = [
+                'icon' => 'authentication',
+                'name' => 'Denúncias',
+                'path' => '/admin/reports',
+                'badge' => Report::where('status', 'pending')->count(),
+            ];
+
+            $items[] = [
                 'icon' => 'calendar',
                 'name' => 'Calendários',
                 'path' => '/schedule',
             ];
 
-            if (\Illuminate\Support\Facades\Gate::allows('access-goals')) {
+            if (Gate::allows('access-goals')) {
                 $items[] = [
                     'icon' => 'task',
                     'name' => 'Metas',
@@ -103,7 +144,7 @@ class MenuHelper
                 ];
             }
 
-            if (\Illuminate\Support\Facades\Gate::allows('access-subscriptions')) {
+            if (Gate::allows('access-subscriptions')) {
                 $items[] = [
                     'icon' => 'ui-elements',
                     'name' => 'Planos',
