@@ -7,7 +7,7 @@
     'loading' => false,
     'disabled' => false,
     // Aditivos (não existem no componente original do DPEMT): HTML livre
-    // pra quando o ícone não está no catálogo por nome do <x-ui.icon>.
+    // pra quando o ícone não está no catálogo por nome do x-ui.icon.
     'startIcon' => null,
     'endIcon' => null,
 ])
