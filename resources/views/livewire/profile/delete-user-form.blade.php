@@ -8,15 +8,13 @@
         </p>
     </div>
 
-    <button x-data="" x-on:click.prevent="$dispatch('open-delete-user-modal')"
+    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'delete-user')"
         class="inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 transition ease-in-out duration-150"
         data-test="delete-user-button">
         {{ __('Delete account') }}
     </button>
 
-    <x-ui.modal x-data="{ open: {{ $errors->isNotEmpty() ? 'true' : 'false' }} }"
-        @open-delete-user-modal.window="open = true" @close-delete-user-modal.window="open = false"
-        @close.window="open = false" :isOpen="$errors->isNotEmpty()" class="max-w-md">
+    <x-ui.modal name="delete-user" maxWidth="md" :open="$errors->isNotEmpty()">
         <form method="POST" wire:submit="deleteUser" class="p-6">
             <h2 class="text-lg font-medium text-zinc-900 dark:text-zinc-100">
                 {{ __('Are you sure you want to delete your account?') }}

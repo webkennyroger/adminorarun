@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <button class="edit-button" @click="$dispatch('open-profile-info-modal')">
+        <button class="edit-button" @click="$dispatch('open-modal', 'profile-info')">
             <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -54,18 +54,14 @@
     </div>
 
     <!-- Profile Info Modal -->
-    <x-ui.modal x-data="{ open: false }" @open-profile-info-modal.window="open = true"
-        @close-profile-info-modal.window="open = false" :isOpen="false" class="max-w-[700px]">
-        <div
-            class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-zinc-900 lg:p-11">
-            <div class="px-2 pr-14">
-                <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
-                    Editar informações pessoais
-                </h4>
-                <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
-                    Atualize seus dados para manter seu perfil atualizado.
-                </p>
-            </div>
+    <x-ui.modal name="profile-info" maxWidth="700px">
+        <div>
+            <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
+                Editar informações pessoais
+            </h4>
+            <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
+                Atualize seus dados para manter seu perfil atualizado.
+            </p>
             <form wire:submit="updateProfileInformation" class="flex flex-col">
                 <div class="custom-scrollbar h-[458px] overflow-y-auto p-2">
                     <div class="mt-7">

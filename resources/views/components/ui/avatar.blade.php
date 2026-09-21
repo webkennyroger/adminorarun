@@ -1,49 +1,94 @@
-
 @props([
-    'src' => '',
-    'alt' => 'User Avatar',
-    'size' => 'medium',
-    'status' => 'none',
+    'src' => null,
+    'name' => null,
+    'initials' => null,
+    'alt' => null,
+    'size' => 'md',
+    'circle' => true,
+    // 'online' | 'offline' | 'busy' | null — indicador de status, aditivo
+    // (não existe no componente original do DPEMT).
+    'status' => null,
 ])
 
 @php
-    $sizeClasses = [
-        'xsmall' => 'h-6 w-6 max-w-6',
-        'small' => 'h-8 w-8 max-w-8',
-        'medium' => 'h-10 w-10 max-w-10',
-        'large' => 'h-12 w-12 max-w-12',
-        'xlarge' => 'h-14 w-14 max-w-14',
-        'xxlarge' => 'h-16 w-16 max-w-16',
+    $sizes = [
+        'xs' => 'w-6 h-6 text-[10px]',
+        'sm' => 'w-8 h-8 text-xs',
+        'md' => 'w-10 h-10 text-sm',
+        'lg' => 'w-12 h-12 text-base',
+        'xl' => 'w-16 h-16 text-lg',
     ];
+    $sizeClasses = $sizes[$size] ?? $sizes['md'];
+    $shapeClass = $circle ? 'rounded-full' : 'rounded-lg';
 
-    $statusSizeClasses = [
-        'xsmall' => 'h-1.5 w-1.5 max-w-1.5',
-        'small' => 'h-2 w-2 max-w-2',
-        'medium' => 'h-2.5 w-2.5 max-w-2.5',
-        'large' => 'h-3 w-3 max-w-3',
-        'xlarge' => 'h-3.5 w-3.5 max-w-3.5',
-        'xxlarge' => 'h-4 w-4 max-w-4',
+    $statusDotSizes = [
+        'xs' => 'h-1.5 w-1.5',
+        'sm' => 'h-2 w-2',
+        'md' => 'h-2.5 w-2.5',
+        'lg' => 'h-3 w-3',
+        'xl' => 'h-3.5 w-3.5',
     ];
-
-    $statusColorClasses = [
+    $statusColors = [
         'online' => 'bg-green-500',
         'offline' => 'bg-red-400',
         'busy' => 'bg-yellow-500',
     ];
+    $statusDotSize = $statusDotSizes[$size] ?? $statusDotSizes['md'];
+    $statusColor = $statusColors[$status] ?? null;
 
-    $sizeClass = $sizeClasses[$size] ?? $sizeClasses['medium'];
-    $statusSizeClass = $statusSizeClasses[$size] ?? $statusSizeClasses['medium'];
-    $statusColorClass = $statusColorClasses[$status] ?? '';
+    $computedInitials = $initials;
+
+    if (! $computedInitials && $name) {
+        $parts = array_values(array_filter(preg_split('/\s+/', trim($name))));
+
+        if (count($parts) === 1) {
+            $computedInitials = mb_strtoupper(mb_substr($parts[0], 0, 2));
+        } elseif (count($parts) > 1) {
+            $first = mb_substr(reset($parts), 0, 1);
+            $last = mb_substr(end($parts), 0, 1);
+            $computedInitials = mb_strtoupper($first . $last);
+        }
+    }
 @endphp
 
-<div class="relative rounded-full {{ $sizeClass }}">
-    <img 
-        src="{{ $src }}" 
-        alt="{{ $alt }}" 
-        class="h-full w-full object-cover rounded-full"
-    />
-    
-    @if($status !== 'none')
-        <span class="absolute bottom-0 right-0 rounded-full border-[1.5px] border-white dark:border-zinc-900 {{ $statusSizeClass }} {{ $statusColorClass }}"></span>
+<div class="relative inline-block">
+    <div
+        x-data="{ imgFailed: false }"
+        {{ $attributes->merge(['class' => "inline-flex items-center justify-center shrink-0 font-semibold overflow-hidden select-none $sizeClasses $shapeClass"]) }}
+        style="background-color: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-color);"
+    >
+        @if($src)
+            <img
+                src="{{ $src }}"
+                alt="{{ $alt ?? $name ?? '' }}"
+                x-show="!imgFailed"
+                x-on:error="imgFailed = true"
+                class="w-full h-full object-cover {{ $shapeClass }}"
+            >
+        @endif
+
+        <span
+            @if($src)
+                x-show="imgFailed"
+                x-cloak
+            @endif
+            aria-hidden="true"
+        >
+            @if($computedInitials)
+                {{ $computedInitials }}
+            @elseif($slot->isNotEmpty())
+                {{ $slot }}
+            @else
+                <svg class="w-1/2 h-1/2" style="color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            @endif
+        </span>
+    </div>
+
+    @if($statusColor)
+        <span
+            class="absolute bottom-0 right-0 rounded-full border-[1.5px] border-white dark:border-zinc-900 {{ $statusDotSize }} {{ $statusColor }}"
+        ></span>
     @endif
 </div>

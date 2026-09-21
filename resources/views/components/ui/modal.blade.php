@@ -1,79 +1,83 @@
 @props([
-    'isOpen' => false,
-    'showCloseButton' => true,
-    'maxWidth' => 'sm:max-w-lg',
+    'name' => 'modal',
+    'maxWidth' => 'md',
+    // Aditivo (não existe no componente original do DPEMT): estado
+    // inicial — útil quando o modal deve já abrir no primeiro render
+    // (ex.: reabrir após um erro de validação vindo do backend).
+    'open' => false,
 ])
 
 @php
-    $wireModel = $attributes->wire('model');
-    $entangle = $wireModel->value() ? "\$wire.entangle('".$wireModel->value()."')" : null;
+    $maxWidths = [
+        'sm' => 'max-w-sm',
+        'md' => 'max-w-md',
+        'lg' => 'max-w-lg',
+        'xl' => 'max-w-xl',
+        '2xl' => 'max-w-2xl',
+        '4xl' => 'max-w-4xl',
+    ];
+    // Aceita tanto uma chave conhecida ('lg', '2xl', ...) quanto um valor
+    // arbitrário ('700px', '40rem') — nesse caso vira max-w-[valor].
+    $widthClass = $maxWidths[$maxWidth] ?? "max-w-[{$maxWidth}]";
 @endphp
 
-<div x-data="{
-        open: {{ $entangle ?? '@js($isOpen)' }},
-        init() {
-            this.$watch('open', value => {
-                if (value) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'unset';
-                }
-            });
-        }
-    }" 
-    {{ $entangle ? '' : 'x-effect=open=' . ($isOpen ? 'true' : 'false') }} 
-    x-show="open" 
-    x-cloak 
-    @keydown.escape.window="open = false"
-    class="fixed inset-0 z-[100] overflow-x-hidden overflow-y-auto pointer-events-none" 
-    role="dialog" 
-    tabindex="-1">
-    
+<div
+    x-data="{ open: @js($open) }"
+    x-on:open-modal.window="$event.detail === '{{ $name }}' && (open = true)"
+    x-on:close-modal.window="$event.detail === '{{ $name }}' && (open = false)"
+    x-on:keydown.escape.window="open = false"
+    x-show="open"
+    x-cloak
+    class="fixed inset-0 z-50 overflow-y-auto"
+    aria-modal="true"
+>
     <!-- Backdrop -->
-    <div x-show="open"
-        x-transition:enter="transition-opacity ease-out duration-300"
+    <div
+        x-show="open"
+        x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
-        x-transition:leave="transition-opacity ease-in duration-200"
+        x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
+        class="fixed inset-0 backdrop-blur-sm"
+        style="background-color: rgba(0, 0, 0, 0.5);"
         @click="open = false"
-        class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm dark:bg-neutral-900/80 pointer-events-auto z-[99]">
-        
-    </div>
+    ></div>
 
-    <!-- Container -->
-    <div class="fixed inset-0 z-[101] overflow-y-auto overflow-x-hidden flex items-start justify-center p-4 pt-8 sm:pt-14 pointer-events-none">
-        
-        
-        <div x-show="open" 
-            x-transition:enter="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all duration-500" 
-            x-transition:enter-start="opacity-0 mt-0"
-            x-transition:enter-end="opacity-100 mt-7" 
-            x-transition:leave="ease-out transition-all duration-300"
-            x-transition:leave-start="opacity-100 mt-7"
-            x-transition:leave-end="opacity-0 mt-0"
-            class="relative w-full {{ $maxWidth }} flex flex-col bg-white dark:bg-zinc-900 border-b border-zinc-200/80 dark:border-zinc-800 rounded-xl pointer-events-auto shadow-xl {{ $attributes->get('class') }}" 
-            @click.stop>
-            
-            @if ($showCloseButton)
-            <div class="absolute top-2 end-2 z-10">
-                <button @click="open = false; $wire.dispatch('modal-closed')" type="button" class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-neutral-200 hover:bg-gray-200 dark:hover:bg-neutral-600 focus:outline-hidden focus:bg-gray-200 dark:focus:bg-neutral-600 disabled:opacity-50 disabled:pointer-events-none" aria-label="Close">
-                    <span class="sr-only">Close</span>
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-            </div>
+    <!-- Modal Panel -->
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div
+            x-show="open"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="w-full {{ $widthClass }} rounded-2xl shadow-2xl"
+            style="background-color: var(--bg-surface); border: 1px solid var(--border-color);"
+        >
+            @if(isset($header))
+                <div class="px-6 py-4 flex items-center justify-between" style="border-bottom: 1px solid var(--border-color);">
+                    <div>{{ $header }}</div>
+                    <button @click="open = false" class="p-1 rounded-lg transition-colors" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
             @endif
 
-            <div class="overflow-y-auto">
+            <div class="px-6 py-5">
                 {{ $slot }}
             </div>
+
+            @if(isset($footer))
+                <div class="px-6 py-4 flex items-center justify-end gap-3" style="border-top: 1px solid var(--border-color);">
+                    {{ $footer }}
+                </div>
+            @endif
         </div>
     </div>
 </div>
-
-<style>
-    [x-cloak] {
-        display: none;
-    }
-</style>

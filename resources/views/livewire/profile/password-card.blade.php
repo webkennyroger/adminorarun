@@ -33,7 +33,7 @@
             </div>
 
             <div class="flex gap-2">
-                <button class="edit-button" @click="$dispatch('open-password-modal')">
+                <button class="edit-button" @click="$dispatch('open-modal', 'password')">
                     <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -43,7 +43,7 @@
                     Editar Senha
                 </button>
 
-                <button class="edit-button" @click="$dispatch('open-twofactor-modal')">
+                <button class="edit-button" @click="$dispatch('open-modal', 'twofactor')">
                     <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -56,19 +56,14 @@
         </div>
     </div>
 
-    <x-ui.modal x-data="{ open: false }" @open-password-modal.window="open = true"
-        @close-modal.window="if ($event.detail === 'open-password-modal') open = false" :isOpen="false"
-        class="max-w-[700px]">
-        <div
-            class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-zinc-900 lg:p-11">
-            <div class="px-2 pr-14">
-                <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
-                    Update Password
-                </h4>
-                <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
-                    Ensure your account is using a long, random password to stay secure.
-                </p>
-            </div>
+    <x-ui.modal name="password" maxWidth="700px">
+        <div>
+            <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
+                Update Password
+            </h4>
+            <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
+                Ensure your account is using a long, random password to stay secure.
+            </p>
             <form wire:submit="updatePassword" class="flex flex-col space-y-6">
                 <div class="px-2 space-y-4">
                     <div>
@@ -117,22 +112,13 @@
     </x-ui.modal>
 
     <!-- Two-Factor Authentication Modal -->
-    <x-ui.modal x-data="{ open: false }" @open-twofactor-modal.window="open = true"
-        @close-modal.window="if ($event.detail === 'open-twofactor-modal') open = false" :isOpen="false"
-        class="max-w-[700px]">
-        <div
-            class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-zinc-900 lg:p-11">
-            <div class="px-2 pr-14">
-                <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
-                    Autenticação de Dois Fatores
-                </h4>
-                <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
-                    Gerencie suas configurações de autenticação de dois fatores
-                </p>
-            </div>
-            <div class="px-2">
-                <livewire:profile.two-factor-card />
-            </div>
-        </div>
+    <x-ui.modal name="twofactor" maxWidth="700px">
+        <h4 class="mb-2 text-2xl font-semibold text-zinc-800 dark:text-white/90">
+            Autenticação de Dois Fatores
+        </h4>
+        <p class="mb-6 text-sm text-zinc-500 dark:text-zinc-400 lg:mb-7">
+            Gerencie suas configurações de autenticação de dois fatores
+        </p>
+        <livewire:profile.two-factor-card />
     </x-ui.modal>
 </section>
