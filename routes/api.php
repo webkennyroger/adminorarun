@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\PollController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SaveController;
 use App\Http\Controllers\Api\SegmentController;
 use App\Http\Controllers\Api\StatsController;
@@ -112,6 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/suggested', [UserController::class, 'suggested']);
     Route::post('/users/{id}/follow', [UserController::class, 'toggleFollow']);
     Route::post('/users/{id}/block', [UserController::class, 'toggleBlock']);
+    Route::post('/report', [ReportController::class, 'store']);
     Route::get('/users/following', [UserController::class, 'following']);
     Route::get('/users/{id}', [UserController::class, 'profile']);
     Route::post('/user/profile', [UserController::class, 'updateProfile']);

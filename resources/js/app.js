@@ -1,4 +1,5 @@
 import "./bootstrap";
+import "./echo";
 import "./components/toast";
 // import Alpine from "alpinejs"; // Removed to avoid conflict with Livewire's Alpine
 import intersect from "@alpinejs/intersect";

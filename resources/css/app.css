@@ -48,18 +48,21 @@
     --color-white: #ffffff;
     --color-black: #000000;
 
-    --color-brand-25: #f2f7ff;
-    --color-brand-50: #ecf3ff;
-    --color-brand-100: #dde9ff;
-    --color-brand-200: #c2d6ff;
-    --color-brand-300: #9cb9ff;
-    --color-brand-400: #7592ff;
-    --color-brand-500: #465fff;
-    --color-brand-600: #3641f5;
-    --color-brand-700: #2a31d8;
-    --color-brand-800: #252dae;
-    --color-brand-900: #262e89;
-    --color-brand-950: #161950;
+    /* Escala verde derivada de #16B83E (cor "ORA RUN" do app mobile) —
+       troca o accent do admin inteiro, já que bg-brand-*/text-brand-*/
+       ring-brand-*/menu-item-active etc. usam essa escala em todo o admin. */
+    --color-brand-25: #f2fbf5;
+    --color-brand-50: #e6f8ec;
+    --color-brand-100: #ccf1d9;
+    --color-brand-200: #99e3b3;
+    --color-brand-300: #66d58c;
+    --color-brand-400: #33c765;
+    --color-brand-500: #16b83e;
+    --color-brand-600: #129433;
+    --color-brand-700: #0e7028;
+    --color-brand-800: #0a4c1c;
+    --color-brand-900: #063311;
+    --color-brand-950: #031a09;
 
     --color-blue-light-25: #f5fbff;
     --color-blue-light-50: #f0f9ff;
