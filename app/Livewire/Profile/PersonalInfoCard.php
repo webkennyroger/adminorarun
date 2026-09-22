@@ -94,7 +94,7 @@ class PersonalInfoCard extends Component
         $this->user->refresh();
 
         $this->dispatch('profile-updated');
-        $this->dispatch('close-profile-info-modal');
+        $this->dispatch('close-modal', 'profile-info');
     }
 
     public function render()

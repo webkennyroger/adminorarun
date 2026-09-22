@@ -133,12 +133,8 @@ Route::middleware(['auth', 'check.admin.or.manager'])->group(function () {
     Route::get('/admin/segments', SegmentIndex::class)->name('admin.segments.index');
     Route::get('/admin/reports', ReportIndex::class)->name('admin.reports.index');
 
-    // Rota de Gerenciamento de Categorias
+    // Rota de Gerenciamento de Categorias (create/edit vivem no modal do próprio CategoryIndex)
     Route::get('/categories', CategoryIndex::class)->name('categories.index');
-    Route::view('/categories/create', 'livewire.categories.create')->name('categories.create');
-    Route::get('/categories/{category}/edit', function ($category) {
-        return view('livewire.categories.edit', compact('category'));
-    })->name('categories.edit');
 
     // Goals (Metas)
     Route::get('/goals', GoalIndex::class)->name('goals.index');

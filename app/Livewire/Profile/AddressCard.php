@@ -65,7 +65,7 @@ class AddressCard extends Component
             ]
         );
 
-        $this->dispatch('close-profile-address-modal');
+        $this->dispatch('close-modal', 'address');
         $this->dispatch('profile-updated'); // Optional: Update parent/header if needed
     }
 

@@ -23,8 +23,8 @@
 
 <div
     x-data="{ open: @js($open) }"
-    x-on:open-modal.window="$event.detail === '{{ $name }}' && (open = true)"
-    x-on:close-modal.window="$event.detail === '{{ $name }}' && (open = false)"
+    x-on:open-modal.window="(Array.isArray($event.detail) ? $event.detail[0] : $event.detail) === '{{ $name }}' && (open = true)"
+    x-on:close-modal.window="(Array.isArray($event.detail) ? $event.detail[0] : $event.detail) === '{{ $name }}' && (open = false)"
     x-on:keydown.escape.window="open = false"
     x-show="open"
     x-cloak
