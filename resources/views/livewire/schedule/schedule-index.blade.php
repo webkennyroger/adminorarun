@@ -89,6 +89,16 @@
                             </label>
                         </div>
                     </div>
+
+                    <!-- Foto do Evento -->
+                    <div>
+                        <label for="event-photo"
+                            class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                            Foto do Evento
+                        </label>
+                        <input type="file" id="event-photo" accept="image/*"
+                            class="w-full text-sm text-zinc-600 dark:text-zinc-400">
+                    </div>
                 </div>
 
                 <!-- Ações do Modal -->
@@ -176,6 +186,29 @@
                             </path>
                         </svg>
                         Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="confirmDeleteModal" class="fixed inset-0 z-60 hidden items-center justify-center bg-black/50"
+        style="display: none;">
+        <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-sm mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-zinc-900 dark:text-white mb-2">Confirmar Exclusão</h3>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+                    Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.
+                </p>
+                <div class="flex justify-end gap-3">
+                    <button type="button"
+                        class="cancel-delete-btn px-4 py-2 bg-zinc-200 text-zinc-800 rounded-lg hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200">
+                        Cancelar
+                    </button>
+                    <button type="button"
+                        class="confirm-delete-btn px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        Sim, Excluir
                     </button>
                 </div>
             </div>

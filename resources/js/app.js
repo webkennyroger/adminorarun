@@ -308,9 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector("#goalChart")) {
         import("./components/goals-chart").then((m) => m.initGoalChart());
     }
-    if (document.querySelector("#userGrowthChart")) {
-        import("./components/user-growth-chart");
-    }
     if (document.querySelector("#calendar")) {
         import("./components/calendar-init").then((m) => m.calendarInit());
     }

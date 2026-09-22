@@ -84,7 +84,7 @@
             this.chart = new ApexCharts(document.querySelector('#userGrowthChart'), options);
             this.chart.render();
         }
-    }" x-init="$nextTick(() => initChart())" @chart-update.window="initChart()">
+    }" wire:key="user-growth-chart-{{ $period }}" x-init="$nextTick(() => initChart())" @chart-update.window="initChart()">
 
     <!-- Header -->
     <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:items-center sm:justify-between">

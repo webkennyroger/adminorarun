@@ -17,7 +17,7 @@ class ActivityList extends Component
     #[Layout('components.layouts.app')]
     public function render()
     {
-        $activities = Activity::with('user', 'comments', 'likes')
+        $activities = Activity::with('user.profile', 'comments', 'likes')
             ->where(function ($q) {
                 $q->where('title', 'like', '%'.$this->search.'%')
                     ->orWhere('description', 'like', '%'.$this->search.'%');
