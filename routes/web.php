@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\BillingController;
-use App\Http\Controllers\MaintenanceController;
 use App\Livewire\Activities\ActivityList;
 use App\Livewire\Categories\CategoryIndex;
 use App\Livewire\Challenges\ChallengeIndex;
@@ -156,13 +155,6 @@ Route::middleware(['auth', 'check.admin.or.manager'])->group(function () {
     // Rota de Gerenciamento de Atividades
     Route::get('/activities', ActivityList::class)->name('activities.index');
 
-    // Billing / Minha Assinatura
-    Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
-    Route::get('/billing/subscribe/{plan}', [BillingController::class, 'subscribe'])->name('billing.subscribe');
-    Route::post('/billing/cancel', [BillingController::class, 'cancel'])->name('billing.cancel');
-    Route::post('/billing/resume', [BillingController::class, 'resume'])->name('billing.resume');
-    Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
-
     // Rota para o componente Support/Index
     Route::get('/support', SupportIndex::class)->name('support.index');
     Route::post('/support', function (Request $request) {
@@ -243,5 +235,13 @@ Route::middleware(['auth', 'check.admin.or.manager'])->group(function () {
     // });
 });
 
-// Maintenance Route (Temporary for Initial Seeding)
-Route::get('/maintenance/seed', [MaintenanceController::class, 'seed']);
+// Billing / Minha Assinatura — reachable by any authenticated user (not just
+// admin/manager), since regular users are redirected here after registering
+// or logging in with Google from the otherwise admin-only web app.
+Route::middleware(['auth'])->group(function () {
+    Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
+    Route::get('/billing/subscribe/{plan}', [BillingController::class, 'subscribe'])->name('billing.subscribe');
+    Route::post('/billing/cancel', [BillingController::class, 'cancel'])->name('billing.cancel');
+    Route::post('/billing/resume', [BillingController::class, 'resume'])->name('billing.resume');
+    Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
+});
