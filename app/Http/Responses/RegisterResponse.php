@@ -16,6 +16,10 @@ class RegisterResponse implements RegisterResponseContract
      */
     public function toResponse($request)
     {
-        return redirect()->route('users.show', ['user' => auth()->user()]);
+        $user = auth()->user();
+
+        return ($user->isAdmin() || $user->isManager())
+            ? redirect()->route('dashboard')
+            : redirect('/billing');
     }
 }

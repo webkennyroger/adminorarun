@@ -14,8 +14,10 @@ test('new users can register', function () {
         'password_confirmation' => 'password',
     ]);
 
+    // A freshly registered account has no admin/manager role yet, so it's
+    // sent to self-service billing rather than the admin-only users.show.
     $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('users.show', ['user' => 1]));
+        ->assertRedirect('/billing');
 
     $this->assertAuthenticated();
 });
