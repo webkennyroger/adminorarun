@@ -55,7 +55,7 @@ class SocialMediaCard extends Component
             ]
         );
 
-        $this->dispatch('close-profile-social-modal');
+        $this->dispatch('close-modal', 'social-media');
         $this->dispatch('profile-updated');
     }
 

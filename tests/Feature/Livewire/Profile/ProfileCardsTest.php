@@ -80,7 +80,11 @@ class ProfileCardsTest extends TestCase
             ->set('nickname', 'meu.nick')
             ->set('phone', '11999999999')
             ->call('updateProfileInformation')
-            ->assertHasNoErrors();
+            ->assertHasNoErrors()
+            // The modal's x-ui.modal name="profile-info" only closes on a
+            // 'close-modal' event carrying that same name — not the old,
+            // unlistened-to 'close-profile-info-modal'.
+            ->assertDispatched('close-modal', 'profile-info');
 
         $this->assertDatabaseHas('users', [
             'id' => $admin->id,
@@ -113,7 +117,8 @@ class ProfileCardsTest extends TestCase
             ->set('state', 'SP')
             ->set('zip_code', '01000-000')
             ->call('saveAddress')
-            ->assertHasNoErrors();
+            ->assertHasNoErrors()
+            ->assertDispatched('close-modal', 'address');
 
         $this->assertDatabaseHas('profiles', [
             'user_id' => $admin->id,
@@ -138,7 +143,8 @@ class ProfileCardsTest extends TestCase
             ->set('tiktok', 'meutiktok')
             ->set('mere', 'https://mere.example/perfil')
             ->call('updateSocialMedia')
-            ->assertHasNoErrors();
+            ->assertHasNoErrors()
+            ->assertDispatched('close-modal', 'social-media');
 
         $this->assertDatabaseHas('profiles', [
             'user_id' => $admin->id,
