@@ -51,6 +51,13 @@ class ActivityController extends Controller
             },
         ]);
 
+        // Nunca mostrar conteúdo de usuários que o usuário atual bloqueou.
+        $blockedUserIds = $user->blockedUsers()->pluck('users.id')->toArray();
+        if (! empty($blockedUserIds)) {
+            $activitiesQuery->whereNotIn('user_id', $blockedUserIds);
+            $postsQuery->whereNotIn('user_id', $blockedUserIds);
+        }
+
         if ($feed === 'timeline' || $feed === 'network') {
             $followingIds = $user->following()->pluck('following_id')->toArray();
             $followingIds[] = $user->id; // Incluir o próprio usuário
