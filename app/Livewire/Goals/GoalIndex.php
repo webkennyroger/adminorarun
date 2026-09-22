@@ -48,7 +48,7 @@ class GoalIndex extends Component
 
     public $selectAll = false;
 
-    public function updatedAppPage($value)
+    public function updatedPage($value)
     {
         // Reset selected when page changes
         $this->selected = [];

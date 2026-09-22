@@ -57,7 +57,7 @@ class EventModal extends Component
     #[On('openEditModal')]
     public function openEditModal($eventId)
     {
-        $event = Schedule::findOrFail($eventId);
+        $event = Schedule::where('user_id', auth()->id())->findOrFail($eventId);
 
         $this->eventId = $event->id;
         $this->title = $event->title;
@@ -89,7 +89,7 @@ class EventModal extends Component
         }
 
         if ($this->editMode) {
-            $event = Schedule::findOrFail($this->eventId);
+            $event = Schedule::where('user_id', auth()->id())->findOrFail($this->eventId);
             $event->update($data);
             $this->dispatch('toast', [
                 'type' => 'info',
@@ -124,7 +124,7 @@ class EventModal extends Component
     public function deleteEvent()
     {
         if ($this->eventId) {
-            $event = Schedule::findOrFail($this->eventId);
+            $event = Schedule::where('user_id', auth()->id())->findOrFail($this->eventId);
             $event->delete();
 
             $this->dispatch('toast', [

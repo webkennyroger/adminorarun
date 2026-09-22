@@ -163,7 +163,6 @@ class CategoryIndex extends Component
         $this->editing = $category;
         $this->name = $category->name;
         $this->color = $category->color;
-        $this->description = $category->description ?? '';
         $this->showModal = true;
     }
 
